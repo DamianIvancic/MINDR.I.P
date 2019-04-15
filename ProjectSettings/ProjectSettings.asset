@@ -617,9 +617,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 3f738629-fbb3-4da6-8b27-84eee18c956c
-  projectName: Platfo(e)rmer
-  organizationId: damianivancic999
+  cloudProjectId: eea44a35-922e-484b-a852-f905d21158f5
+  projectName: MindR.I.P
+  organizationId: tilter
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

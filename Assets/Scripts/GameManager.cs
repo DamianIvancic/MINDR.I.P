@@ -115,4 +115,9 @@ public class GameManager : MonoBehaviour
         else
             SceneManager.LoadScene(0);
     }
+
+    public void InitializeSettings()
+    {
+
+    }
 }

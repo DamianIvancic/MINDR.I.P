@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
 	void Update ()
     {
-		
+        UpdateMovement();
 	}
 
     void UpdateMovement()

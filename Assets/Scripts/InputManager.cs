@@ -127,8 +127,8 @@ public class InputManager : MonoBehaviour
 
                 GameManager.GM.InitializeSettings();
 
-                if (GameManager.GM.Player != null)
-                    GameManager.GM.Player.RegisterCallbacks();
+                if (GameManager.GM.Player != null) ;
+                   //GameManager.GM.Player.RegisterCallbacks();
             }
         }
     }

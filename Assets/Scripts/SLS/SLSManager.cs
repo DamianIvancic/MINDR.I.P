@@ -29,12 +29,12 @@ public class SLSManager : MonoBehaviour {
     public void SaveSettings() //saves settings into a file in binary format
     {
         Settings = new Settings(InputManager.Instance.KeyBindings);
-        XMLSerializer.SaveSettings(Settings);
+        BinarySerializer.SaveSettings(Settings);
     }
 
 
     public void LoadSettings()
     {
-        Settings = XMLSerializer.LoadSettings();
+        Settings = BinarySerializer.LoadSettings();
     }
 }

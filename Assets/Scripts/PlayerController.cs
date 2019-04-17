@@ -7,9 +7,10 @@ public class PlayerController : MonoBehaviour
     public float Speed;
     public float JumpForce;
 
+    private bool _runToggled = false;
     private float _movementH;
     private float _movementV;
-    private Vector2 _movement;
+    private Vector3 _scale;
 
     private int _playerLayer;
     private int _platformLayer;
@@ -21,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
     private bool _isSwinging;
     private float _swingTimer = 0f;
-    private float _swingCooldown;
+    private float _swingCooldown = 1f;
 
     [HideInInspector]
     public Rigidbody2D RB;
@@ -37,32 +38,50 @@ public class PlayerController : MonoBehaviour
 
         RB = GetComponent<Rigidbody2D>();
         swingSound = GetComponent<AudioSource>();
-        _anim = GetComponent<Animator>();    
+        _anim = GetComponent<Animator>();
+        _scale = transform.localScale;
+
     }
 
-	void Start () {
-		
+	void Start ()
+    {
+        InputManager.Instance.RegisterCallbacks();         //registered from here instead of inside InputManager since there might not be a PlayerController active when the InputManager is instantiated
 	}
 	
 
 	void Update ()
     {
         UpdateMovement();
-	}
+        UpdateAnimator();
+        SetOrientation();
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(LayerMask.LayerToName(collision.gameObject.layer) == "Ground" || LayerMask.LayerToName(collision.gameObject.layer) == "Platform")
+        {
+            //Debug.Log("collision!" + collision.gameObject.name);
+        }
+    }
 
     void UpdateMovement()
     {
-        UpdateJump();
+        if (!_anim.GetBool("Blocking") && !_anim.GetBool("FireBreathing") && !_anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
+        {
+            UpdateJump();
 
-        _movement = new Vector2(_movementH, _movementV);
-        _movement.Normalize();
+            if (_runToggled)
+                RB.velocity = new Vector2(_movementH * Speed * 1.5f, _movementV);
+            else
+                RB.velocity = new Vector2(_movementH * Speed, _movementV);
 
-        RB.velocity = _movement * Speed;
-
-        if (RB.velocity.magnitude == 0f)
-            RB.isKinematic = true; //prevents enemies from pushing the player
+            /*if (RB.velocity.magnitude == 0f)
+                 RB.isKinematic = true; //prevents enemies from pushing the player
+             else
+                 RB.isKinematic = false;*/
+        }
         else
-            RB.isKinematic = false;
+            RB.velocity = Vector2.zero;
     }
 
     void UpdateJump()
@@ -81,48 +100,57 @@ public class PlayerController : MonoBehaviour
 
     void UpdateAnimator()
     {
-        if (RB.velocity.magnitude > 0)
-            _anim.SetBool("IsMoving", true);
-        else
-            _anim.SetBool("IsMoving", false);
+        _anim.SetBool("Grounded", _isGrounded);
 
-        SetOrientation();
+        if (RB.velocity.x != 0 && RB.velocity.y == 0)
+            _anim.SetBool(_runToggled ? "Running" : "Walking", true);
+        else if(RB.velocity.x == 0 || !_isGrounded)
+            _anim.SetBool(_runToggled ? "Running" : "Walking", false);
+
+        if (!_isGrounded && RB.velocity.y > 0)
+            _anim.SetBool("Jumping", true);
+        else if (!_isGrounded && RB.velocity.y < 0)
+            _anim.SetBool("Falling", true);
+        else
+        {
+            _anim.SetBool("Jumping", false);
+            _anim.SetBool("Falling", false);
+        }
+
+
+        /*   if (RB.velocity.y < 0)  <-------------JUMP
+           {
+               _anim.SetBool("Up", false);
+               _anim.SetBool("Down", true);
+           }
+           else if (RB.velocity.y == 0)
+           {
+               _anim.SetBool("Up", false);
+               _anim.SetBool("Down", false);
+           }
+           else if (RB.velocity.y > 0)
+           {
+               _anim.SetBool("Up", true);
+               _anim.SetBool("Down", false);
+           }*/
+
+
+
+     
     }
 
     void SetOrientation()
     {
         if (RB.velocity.x < 0)
         {
-            _anim.SetBool("Right", false);
-            _anim.SetBool("Left", true);
-        }
-        else if (RB.velocity.x == 0)
-        {
-            _anim.SetBool("Right", false);
-            _anim.SetBool("Left", false);
+            Vector3 scale = _scale;
+            scale.x *= -1;
+            transform.localScale = scale;
         }
         else if (RB.velocity.x > 0)
         {
-            _anim.SetBool("Right", true);
-            _anim.SetBool("Left", false);
+            transform.localScale = _scale;
         }
-
-
-     /*   if (RB.velocity.y < 0)  <-------------JUMP
-        {
-            _anim.SetBool("Up", false);
-            _anim.SetBool("Down", true);
-        }
-        else if (RB.velocity.y == 0)
-        {
-            _anim.SetBool("Up", false);
-            _anim.SetBool("Down", false);
-        }
-        else if (RB.velocity.y > 0)
-        {
-            _anim.SetBool("Up", true);
-            _anim.SetBool("Down", false);
-        }*/
     }
 
 
@@ -145,24 +173,67 @@ public class PlayerController : MonoBehaviour
 
     public void Jump()
     {
-        if(_isGrounded)
-          RB.AddForce(Vector2.up * JumpForce);
+        if (_isGrounded)
+        {
+            RB.AddForce(Vector2.up * JumpForce);
+        }
     }
 
     public void StopJump()
     {
         if (_movementV > 0f)
-            _movementV = 0f;
-    }
-
-    public void Swing()
-    {
-        if (_swingTimer > _swingCooldown)
         {
-            _anim.SetTrigger("IsSwinging");
-            _swingTimer = 0f;
+            Vector2 velocity = RB.velocity;
+            velocity.y = 0f;
+            RB.velocity = velocity;
         }
     }
 
+    public void Attack()
+    {
+        _anim.SetTrigger("Attacking");   
+    }
+
+    public void Dash()
+    {
+        _anim.SetTrigger("Dashing");
+    }
+
+    public void Stomp()
+    {
+        _anim.SetTrigger("Stomping");
+    }
+
+    public void Block()
+    {
+        _anim.SetBool("Blocking", true);
+    }
+
+    public void StopBlock()
+    {
+        _anim.SetBool("Blocking", false);
+    }
+
+    public void FireBreath()
+    {
+        _anim.SetBool("FireBreathing", true);
+    }
+
+    public void StopFireBreath()
+    {
+        _anim.SetBool("FireBreathing", false);
+    }
+
+    public void ToggleRun()
+    {
+        _anim.SetBool(_runToggled ? "Running" : "Walking", false);
+        _runToggled = !_runToggled;    
+    }
+
     #endregion
+
+    void OnDrawGizmosSelected()
+    {
+
+    }
 }

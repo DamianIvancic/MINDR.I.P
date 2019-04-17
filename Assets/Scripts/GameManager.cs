@@ -38,9 +38,9 @@ public class GameManager : MonoBehaviour
 
             switch(sceneIndex)
             {
-                case (0):
+               /* case (0):
                     gameState = GameState.Menu;
-                    break;
+                    break;*/
                 default:
                     Player = FindObjectOfType<PlayerController>();
                     MainCamera = FindObjectOfType<CameraController>();
@@ -114,10 +114,5 @@ public class GameManager : MonoBehaviour
             Application.Quit();
         else
             SceneManager.LoadScene(0);
-    }
-
-    public void InitializeSettings()
-    {
-
     }
 }

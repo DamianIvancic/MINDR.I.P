@@ -8,14 +8,19 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 
+/* Works together with the SLS system and the PlayerController to provide dynamic binding of keys to different actions defined by the PlayerController.
+ * By default, this sets a number of bindings to predefined keys, which are then connected to certain callbacks in the PlayerController once that scripts run its Start() .
+ * The OnGUI() and the ChangeKey() functions when used together with in-editor UI elements provide ability to dynamically reconfigure bindings at runtime.
+ * When bindings are set or re-binded the data is written to a file via the SLS system and on every start-up the InputManager checks if there's a file containing 
+ * binding data which it can read from. If yes it loads it in, if no it sets the default ones and makes a file containing that data which is later loaded from and modified when bindings change.*/
+
 public class InputManager : MonoBehaviour
 {
-
-    public List<Text> Keys;
-    public List<Binding> KeyBindings;
-
+     
+    public List<Text> Keys;   //list of UI text elements used to display what key is currently bound to the respective action
+  
     [System.Serializable]
-    public class Binding
+    public class Binding  
     {
         public Binding(string action, KeyCode key)
         {
@@ -25,20 +30,24 @@ public class InputManager : MonoBehaviour
 
         public void ClearCallBacks()
         {
-            ActionCallBack = null;
-            StopActionCallBack = null;
+            GetKeyDownCallback = null;
+            GetKeyCallback = null;
+            GetKeyUpCallback = null;
         }
 
         public string Action;
         public KeyCode KeyCode;
 
         public delegate void OnActionRegistered();
-        public OnActionRegistered ActionCallBack;
-        public OnActionRegistered StopActionCallBack;
+        public OnActionRegistered GetKeyDownCallback;
+        public OnActionRegistered GetKeyCallback;
+        public OnActionRegistered GetKeyUpCallback;
     }
 
-    private GameObject CurrentKey;
+    private GameObject CurrentKey; //this gets set by ChangeKey(), which is a callback for the UI Buttons
 
+    [HideInInspector]
+    public List<Binding> KeyBindings;
     [HideInInspector]
     public static InputManager Instance;
 
@@ -59,13 +68,12 @@ public class InputManager : MonoBehaviour
                 SLSManager.Instance.SaveSettings();
             }
 
-            RefreshDisplayedKeyBindings();
+            //RefreshDisplayedKeyBindings();
         }
     }
 
     void Update()
     {
-
         if (GameManager.GM.gameState == GameManager.GameState.Playing)
         {
 
@@ -74,17 +82,20 @@ public class InputManager : MonoBehaviour
 
             foreach (Binding binding in KeyBindings)
             {
-                if (Input.GetKeyDown(binding.KeyCode) && binding.ActionCallBack != null)
-                    binding.ActionCallBack.Invoke();
+                if (Input.GetKeyDown(binding.KeyCode) && binding.GetKeyDownCallback != null)
+                    binding.GetKeyDownCallback.Invoke();
 
-                if (Input.GetKeyUp(binding.KeyCode) && binding.StopActionCallBack != null)
-                    binding.StopActionCallBack.Invoke();
+                if (Input.GetKey(binding.KeyCode) && binding.GetKeyCallback != null)
+                    binding.GetKeyCallback.Invoke();
+
+                if (Input.GetKeyUp(binding.KeyCode) && binding.GetKeyUpCallback != null)
+                    binding.GetKeyUpCallback.Invoke();
             }
         }
     }
 
-    void OnGUI() // for this to be able to work the GameObject CurrentKey(a GUI Button representing the key) needs to have a name that coresponds to a string Name
-    {            //on one of the Action objects in the list
+    void OnGUI() // for this to be able to work the GameObject CurrentKey(a GUI Button representing the key) needs to have a name that coresponds to a string action
+    {            //on one of the Binding objects in the list
         if (CurrentKey != null)
         {
 
@@ -101,7 +112,7 @@ public class InputManager : MonoBehaviour
             else if (e.isKey)
                 Code = e.keyCode;
 
-            if (Code != KeyCode.None && Code != KeyCode.E)
+            if (Code != KeyCode.None)
             {
                 foreach (Binding binding in KeyBindings) //loops through all bindings 
                 {
@@ -125,10 +136,10 @@ public class InputManager : MonoBehaviour
 
                 CurrentKey = null;
 
-                GameManager.GM.InitializeSettings();
+                SLSManager.Instance.SaveSettings();
 
-                if (GameManager.GM.Player != null) ;
-                   //GameManager.GM.Player.RegisterCallbacks();
+                if (GameManager.GM.Player != null)
+                    RegisterCallbacks();
             }
         }
     }
@@ -137,26 +148,32 @@ public class InputManager : MonoBehaviour
     {
         KeyBindings = new List<Binding>();
 
-        Binding MoveUp = new Binding("Up", KeyCode.UpArrow);
-        KeyBindings.Add(MoveUp);
+        Binding MoveRight = new Binding("Right", KeyCode.D);
+        KeyBindings.Add(MoveRight);
 
-        Binding MoveLeft = new Binding("Left", KeyCode.LeftArrow);
+        Binding MoveLeft = new Binding("Left", KeyCode.A);
         KeyBindings.Add(MoveLeft);
 
-        Binding MoveDown = new Binding("Down", KeyCode.DownArrow);
-        KeyBindings.Add(MoveDown);
-
-        Binding MoveRight = new Binding("Right", KeyCode.RightArrow);
-        KeyBindings.Add(MoveRight);
+        Binding Jump = new Binding("Jump", KeyCode.Space);
+        KeyBindings.Add(Jump);
 
         Binding Attack = new Binding("Attack", KeyCode.Mouse0);
         KeyBindings.Add(Attack);
 
-        Binding Interact = new Binding("Interact", KeyCode.E);
-        KeyBindings.Add(Interact);
+        Binding Dash = new Binding("Dash", KeyCode.W);
+        KeyBindings.Add(Dash);
 
-        /*  Action Inventory = new Action("Inventory", KeyCode.I);
-          KeyBindings.Add(Inventory);   */
+        Binding Stomp = new Binding("Stomp", KeyCode.Q);
+        KeyBindings.Add(Stomp);
+
+        Binding Block = new Binding("Block", KeyCode.Mouse1);
+        KeyBindings.Add(Block);
+
+        Binding FireBreath = new Binding("FireBreath", KeyCode.Mouse2);
+        KeyBindings.Add(FireBreath);
+
+        Binding ToggleRun = new Binding("ToggleRun", KeyCode.LeftShift);
+        KeyBindings.Add(ToggleRun);
     }
 
     public void RefreshDisplayedKeyBindings()
@@ -170,5 +187,50 @@ public class InputManager : MonoBehaviour
     public void ChangeKey(GameObject clicked) //this is the callback to the OnClickEvent of the Buttons. The gameObject clicked is the Button itself
     {                                                //this is just used to store the button clicked into a variable inside the script
         CurrentKey = clicked;
+    }
+
+    public void RegisterCallbacks()
+    {
+        List<Binding> keyBindings = KeyBindings;
+
+        foreach (Binding binding in keyBindings)
+        {     
+            switch (binding.Action)
+            {
+
+                case ("Right"):
+                    binding.GetKeyCallback += GameManager.GM.Player.MoveRight;
+                    binding.GetKeyUpCallback += GameManager.GM.Player.StopMovingHorizontal;
+                    break;
+                case ("Left"):
+                    binding.GetKeyCallback += GameManager.GM.Player.MoveLeft;
+                    binding.GetKeyUpCallback += GameManager.GM.Player.StopMovingHorizontal;
+                    break;      
+                case ("Jump"):
+                    binding.GetKeyDownCallback += GameManager.GM.Player.Jump;
+                    binding.GetKeyUpCallback += GameManager.GM.Player.StopJump;
+                    break;
+                case ("Attack"):
+                    binding.GetKeyDownCallback += GameManager.GM.Player.Attack;
+                    break;
+                case ("Dash"):
+                    binding.GetKeyDownCallback += GameManager.GM.Player.Dash;
+                    break;
+                case ("Stomp"):
+                    binding.GetKeyDownCallback += GameManager.GM.Player.Stomp;
+                    break;
+                case ("Block"):
+                    binding.GetKeyDownCallback += GameManager.GM.Player.Block;
+                    binding.GetKeyUpCallback += GameManager.GM.Player.StopBlock;
+                    break;
+                case ("FireBreath"):
+                    binding.GetKeyDownCallback += GameManager.GM.Player.FireBreath;
+                    binding.GetKeyUpCallback += GameManager.GM.Player.StopFireBreath;
+                    break;
+                case ("ToggleRun"):
+                    binding.GetKeyDownCallback += GameManager.GM.Player.ToggleRun;
+                    break;
+            }
+        }
     }
 }

@@ -66,7 +66,8 @@ public class PlayerController : MonoBehaviour
 
     void UpdateMovement()
     {
-        if (!_anim.GetBool("Blocking") && !_anim.GetBool("FireBreathing") && !_anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
+        if (!_anim.GetBool("Blocking") && !_anim.GetBool("FireBreathing") && 
+            !_anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && !_anim.GetCurrentAnimatorStateInfo(0).IsName("Stomp") && !_anim.GetCurrentAnimatorStateInfo(0).IsName("AirDash"))
         {
             UpdateJump();
 
@@ -92,7 +93,7 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i < GroundCheckList.Count; i++) //check if there anything between the player and the points slightly below his feet , if there is he's grounded
         {
-            _isGrounded = Physics2D.Linecast(GroundCheckOrigin.position, GroundCheckList[i].position, GroundLayerMask);
+            _isGrounded = (Physics2D.Linecast(GroundCheckOrigin.position, GroundCheckList[i].position, GroundLayerMask) && RB.velocity.y == 0);
             if (_isGrounded == true)
                 break;
         }
@@ -115,28 +116,7 @@ public class PlayerController : MonoBehaviour
         {
             _anim.SetBool("Jumping", false);
             _anim.SetBool("Falling", false);
-        }
-
-
-        /*   if (RB.velocity.y < 0)  <-------------JUMP
-           {
-               _anim.SetBool("Up", false);
-               _anim.SetBool("Down", true);
-           }
-           else if (RB.velocity.y == 0)
-           {
-               _anim.SetBool("Up", false);
-               _anim.SetBool("Down", false);
-           }
-           else if (RB.velocity.y > 0)
-           {
-               _anim.SetBool("Up", true);
-               _anim.SetBool("Down", false);
-           }*/
-
-
-
-     
+        }  
     }
 
     void SetOrientation()
@@ -191,22 +171,31 @@ public class PlayerController : MonoBehaviour
 
     public void Attack()
     {
-        _anim.SetTrigger("Attacking");   
+        _anim.SetBool("Attacking", true);
     }
 
     public void Dash()
     {
-        _anim.SetTrigger("Dashing");
+        _anim.SetBool("Dashing", true);
     }
 
     public void Stomp()
     {
-        _anim.SetTrigger("Stomping");
+        if (_anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") || _anim.GetCurrentAnimatorStateInfo(0).IsName("Walk")
+           || _anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
+        {
+            if(!CooldownManager.Instance.StompCDActive)
+                 _anim.SetBool("Stomping", true);
+        }
     }
 
     public void Block()
     {
-        _anim.SetBool("Blocking", true);
+        if (_anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") || _anim.GetCurrentAnimatorStateInfo(0).IsName("Walk")
+            || _anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
+        {
+            _anim.SetBool("Blocking", true);
+        }   
     }
 
     public void StopBlock()
@@ -216,7 +205,13 @@ public class PlayerController : MonoBehaviour
 
     public void FireBreath()
     {
-        _anim.SetBool("FireBreathing", true);
+        if (_anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") || _anim.GetCurrentAnimatorStateInfo(0).IsName("Walk")
+          || _anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
+        {
+            if (!CooldownManager.Instance.FireCDActive)      
+                _anim.SetBool("FireBreathing", true);           
+            
+        }
     }
 
     public void StopFireBreath()

@@ -30,9 +30,15 @@ public class Stomp : StateMachineBehaviour {
                 StompPosition.x += 0.35f;
             else
                 StompPosition.x -= 0.35f;
+
             Instantiate(StompHit, StompPosition, Quaternion.identity);
             _instantiated = true;
+
+            CooldownManager.Instance.TriggerStompCD();
         }
+
+        if (stateInfo.normalizedTime >= 0.9)
+            animator.SetBool("Stomping", false);
     }
 
 	// OnStateExit is called when a transition ends and the state machine finishes evaluating this state

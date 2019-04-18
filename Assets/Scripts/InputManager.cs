@@ -220,7 +220,7 @@ public class InputManager : MonoBehaviour
                     binding.GetKeyDownCallback += GameManager.GM.Player.Stomp;
                     break;
                 case ("Block"):
-                    binding.GetKeyDownCallback += GameManager.GM.Player.Block;
+                    binding.GetKeyCallback += GameManager.GM.Player.Block;
                     binding.GetKeyUpCallback += GameManager.GM.Player.StopBlock;
                     break;
                 case ("FireBreath"):

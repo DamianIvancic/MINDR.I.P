@@ -68,7 +68,7 @@ public class InputManager : MonoBehaviour
                 SLSManager.Instance.SaveSettings();
             }
 
-            //RefreshDisplayedKeyBindings();
+            RefreshDisplayedKeyBindings();
         }
     }
 
@@ -160,14 +160,14 @@ public class InputManager : MonoBehaviour
         Binding Attack = new Binding("Attack", KeyCode.Mouse0);
         KeyBindings.Add(Attack);
 
+        Binding Block = new Binding("Block", KeyCode.Mouse1);
+        KeyBindings.Add(Block);
+
         Binding Dash = new Binding("Dash", KeyCode.W);
         KeyBindings.Add(Dash);
 
         Binding Stomp = new Binding("Stomp", KeyCode.Q);
         KeyBindings.Add(Stomp);
-
-        Binding Block = new Binding("Block", KeyCode.Mouse1);
-        KeyBindings.Add(Block);
 
         Binding FireBreath = new Binding("FireBreath", KeyCode.Mouse2);
         KeyBindings.Add(FireBreath);
@@ -180,7 +180,7 @@ public class InputManager : MonoBehaviour
     {
         for (int i = 0; i < KeyBindings.Count; i++)
         {
-            Keys[i].text = KeyBindings[i].KeyCode.ToString();
+            Keys[i].text = KeyBindings[i].KeyCode.ToString().ToUpper();
         }
     }
 
@@ -191,45 +191,59 @@ public class InputManager : MonoBehaviour
 
     public void RegisterCallbacks()
     {
-        List<Binding> keyBindings = KeyBindings;
-
-        foreach (Binding binding in keyBindings)
-        {     
-            switch (binding.Action)
+        if (GameManager.GM.Player == null)
+            Debug.Log("GM.Player not registered!");
+        else
+        {
+            foreach (Binding binding in KeyBindings)
             {
+                switch (binding.Action)
+                {
 
-                case ("Right"):
-                    binding.GetKeyCallback += GameManager.GM.Player.MoveRight;
-                    binding.GetKeyUpCallback += GameManager.GM.Player.StopMovingHorizontal;
-                    break;
-                case ("Left"):
-                    binding.GetKeyCallback += GameManager.GM.Player.MoveLeft;
-                    binding.GetKeyUpCallback += GameManager.GM.Player.StopMovingHorizontal;
-                    break;      
-                case ("Jump"):
-                    binding.GetKeyDownCallback += GameManager.GM.Player.Jump;
-                    binding.GetKeyUpCallback += GameManager.GM.Player.StopJump;
-                    break;
-                case ("Attack"):
-                    binding.GetKeyDownCallback += GameManager.GM.Player.Attack;
-                    break;
-                case ("Dash"):
-                    binding.GetKeyDownCallback += GameManager.GM.Player.Dash;
-                    break;
-                case ("Stomp"):
-                    binding.GetKeyDownCallback += GameManager.GM.Player.Stomp;
-                    break;
-                case ("Block"):
-                    binding.GetKeyCallback += GameManager.GM.Player.Block;
-                    binding.GetKeyUpCallback += GameManager.GM.Player.StopBlock;
-                    break;
-                case ("FireBreath"):
-                    binding.GetKeyDownCallback += GameManager.GM.Player.FireBreath;
-                    binding.GetKeyUpCallback += GameManager.GM.Player.StopFireBreath;
-                    break;
-                case ("ToggleRun"):
-                    binding.GetKeyDownCallback += GameManager.GM.Player.ToggleRun;
-                    break;
+                    case ("Right"):
+                        binding.GetKeyCallback += GameManager.GM.Player.MoveRight;
+                        binding.GetKeyUpCallback += GameManager.GM.Player.StopMovingHorizontal;
+                        break;
+                    case ("Left"):
+                        binding.GetKeyCallback += GameManager.GM.Player.MoveLeft;
+                        binding.GetKeyUpCallback += GameManager.GM.Player.StopMovingHorizontal;
+                        break;
+                    case ("Jump"):
+                        binding.GetKeyDownCallback += GameManager.GM.Player.Jump;
+                        binding.GetKeyUpCallback += GameManager.GM.Player.StopJump;
+                        break;
+                    case ("Attack"):
+                        binding.GetKeyDownCallback += GameManager.GM.Player.Attack;
+                        break;
+                    case ("Dash"):
+                        binding.GetKeyDownCallback += GameManager.GM.Player.Dash;
+                        break;
+                    case ("Stomp"):
+                        binding.GetKeyDownCallback += GameManager.GM.Player.Stomp;
+                        break;
+                    case ("Block"):
+                        binding.GetKeyCallback += GameManager.GM.Player.Block;
+                        binding.GetKeyUpCallback += GameManager.GM.Player.StopBlock;
+                        break;
+                    case ("FireBreath"):
+                        binding.GetKeyDownCallback += GameManager.GM.Player.FireBreath;
+                        binding.GetKeyUpCallback += GameManager.GM.Player.StopFireBreath;
+                        break;
+                    case ("ToggleRun"):
+                        binding.GetKeyDownCallback += GameManager.GM.Player.ToggleRun;
+                        break;
+                }
+            }
+        }  
+    }
+
+    public void ClearCallbacks()
+    {
+        if(KeyBindings != null)
+        {
+            foreach(Binding binding in KeyBindings)
+            {
+                binding.ClearCallBacks();
             }
         }
     }

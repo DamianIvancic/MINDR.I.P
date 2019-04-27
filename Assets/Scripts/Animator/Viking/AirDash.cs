@@ -12,6 +12,8 @@ public class AirDash : StateMachineBehaviour {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        Debug.Log("Entering AirDash");
+
         _transform = GameManager.GM.Player.transform;
         _startingPos = _transform.position;
         _scale = _transform.localScale;
@@ -20,10 +22,16 @@ public class AirDash : StateMachineBehaviour {
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Vector2 pos = GameManager.GM.Player.transform.position;
-        pos.x = Mathf.Lerp(_startingPos.x, _scale.x > 0 ? _startingPos.x + 7 : _startingPos.x - 7, stateInfo.normalizedTime);
-        _transform.position = pos;
+        if (Physics2D.Linecast(_transform.position, _scale.x > 0 ? _transform.position + Vector3.right : _transform.position - Vector3.right, GameManager.GM.Player.GroundLayerMask))
+            animator.SetBool("Dashing", false);
 
+        if (stateInfo.normalizedTime >= 0.1)
+        {
+            Vector2 pos = _transform.position;
+            pos.x = Mathf.Lerp(_startingPos.x, _scale.x > 0 ? _startingPos.x + 7 : _startingPos.x - 7, stateInfo.normalizedTime -0.1f);
+            _transform.position = pos;
+        }
+       
         if (stateInfo.normalizedTime >= 0.9)
             animator.SetBool("Dashing", false);
     }

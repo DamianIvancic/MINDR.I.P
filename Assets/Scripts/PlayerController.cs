@@ -56,11 +56,16 @@ public class PlayerController : MonoBehaviour
         SetOrientation();
     }
 
+    void OnDestroy()
+    {
+        InputManager.Instance.ClearCallbacks();
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if(LayerMask.LayerToName(collision.gameObject.layer) == "Ground" || LayerMask.LayerToName(collision.gameObject.layer) == "Platform")
         {
-            //Debug.Log("collision!" + collision.gameObject.name);
+          
         }
     }
 
@@ -229,6 +234,6 @@ public class PlayerController : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-
+        Gizmos.DrawWireSphere(transform.localScale.x > 0 ? transform.position + Vector3.right  : transform.position - Vector3.right , 1f);
     }
 }

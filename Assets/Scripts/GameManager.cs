@@ -38,23 +38,30 @@ public class GameManager : MonoBehaviour
 
             switch(sceneIndex)
             {
-               /* case (0):
+                case (0):
                     gameState = GameState.Menu;
-                    break;*/
+                    break;
                 default:
                     Player = FindObjectOfType<PlayerController>();
                     MainCamera = FindObjectOfType<CameraController>();
                     gameState = GameState.Playing;
                     break;
             }
+
+            SceneManager.sceneLoaded += OnSceneLoadedListener;
         }
         else
             Destroy(gameObject);
     }
 
 
-	void Update () {
-		
+	void Update ()
+    { 
+        if(gameState == GameState.Playing)
+        {
+            if (Input.GetKey(KeyCode.Escape))
+                PauseGame();
+        }
 	}
 
     void OnSceneLoadedListener(Scene scene, LoadSceneMode mode) //listener for SceneManager.sceneLoaded
@@ -82,7 +89,6 @@ public class GameManager : MonoBehaviour
     public void LoadScene(int sceneNum)
     {
         SceneManager.LoadScene(sceneNum);
-
     }
 
     public void RestartScene()
@@ -90,18 +96,22 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void StartGame()
+    public void PlayGame()
     {
-        //UIManager.Instance.SetMenu(false);
-       // UIManager.Instance.HealthDisplay.SetActive(true);
+        UIManager.Instance.StompCDImage.gameObject.SetActive(true);
+        UIManager.Instance.FireCDImage.gameObject.SetActive(true);
+        UIManager.Instance.SetMainMenu(false);
+        UIManager.Instance.PauseBackgroundPanel.SetActive(false);
 
         gameState = GameState.Playing;
     }
 
     public void PauseGame()
     {
-        //UIManager.Instance.SetMenu(true);
-        //UIManager.Instance.HealthDisplay.SetActive(false);
+        UIManager.Instance.StompCDImage.gameObject.SetActive(false);
+        UIManager.Instance.FireCDImage.gameObject.SetActive(false);
+        UIManager.Instance.SetMainMenu(true);
+        UIManager.Instance.PauseBackgroundPanel.SetActive(true);
 
         gameState = GameState.Paused;
     }

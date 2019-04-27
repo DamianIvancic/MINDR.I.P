@@ -30,10 +30,16 @@ public class Dash : StateMachineBehaviour
 	// OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
 	override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Vector2 pos = _transform.position;
-        pos.x = Mathf.Lerp(_startingPos.x, _scale.x > 0 ? _startingPos.x + 7 : _startingPos.x - 7, stateInfo.normalizedTime);
-        _transform.position = pos;
+        if(Physics2D.Linecast(_transform.position, _scale.x > 0 ? _transform.position + Vector3.right : _transform.position - Vector3.right, GameManager.GM.Player.GroundLayerMask))
+            animator.SetBool("Dashing", false);
 
+        if(stateInfo.normalizedTime >= 0.1)
+        {
+            Vector2 pos = _transform.position;
+            pos.x = Mathf.Lerp(_startingPos.x, _scale.x > 0 ? _startingPos.x + 7 : _startingPos.x - 7, stateInfo.normalizedTime - 0.1f);
+            _transform.position = pos;
+        }
+      
         if (stateInfo.normalizedTime >= 0.9)
             animator.SetBool("Dashing", false);
 	}
@@ -41,6 +47,7 @@ public class Dash : StateMachineBehaviour
 	// OnStateExit is called when a transition ends and the state machine finishes evaluating this state
 	override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+       
 	}
 
 	// OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here

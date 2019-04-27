@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CooldownManager : MonoBehaviour
 {
-    public Image StompCDImage;
-    public Image FireBreathCDImage;
+    public Image StompCDOverlay;
+    public Image FireBreathCDOverlay;
 
     [HideInInspector]
     public bool StompCDActive = false;
@@ -26,6 +27,8 @@ public class CooldownManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            SceneManager.sceneLoaded += OnSceneLoadedListener;
         }
     }
 
@@ -35,41 +38,56 @@ public class CooldownManager : MonoBehaviour
 
 	void Update ()
     {
-        if(StompCDActive)
+        if(GameManager.GM.gameState == GameManager.GameState.Playing)
         {
-            _stompCDTimer += Time.deltaTime;
-            StompCDImage.fillAmount = 1 - _stompCDTimer / _stompCDPeriod;
-
-            if(_stompCDTimer > _stompCDPeriod)
+            if (StompCDActive)
             {
-                StompCDActive = false;
-                _stompCDTimer = 0f;
+                _stompCDTimer += Time.deltaTime;
+                StompCDOverlay.fillAmount = 1 - _stompCDTimer / _stompCDPeriod;
+
+                if (_stompCDTimer > _stompCDPeriod)
+                {
+                    StompCDActive = false;
+                    _stompCDTimer = 0f;
+                }
             }
-        }
 
 
-		if(FireCDActive)
-        {
-            _fireCDTimer += Time.deltaTime;
-            FireBreathCDImage.fillAmount = 1 - _fireCDTimer / _fireCDPeriod;
-
-            if (_fireCDTimer >= _fireCDPeriod)
+            if (FireCDActive)
             {
-                FireCDActive = false;
-                _fireCDTimer = 0f;
+                _fireCDTimer += Time.deltaTime;
+                FireBreathCDOverlay.fillAmount = 1 - _fireCDTimer / _fireCDPeriod;
+
+                if (_fireCDTimer >= _fireCDPeriod)
+                {
+                    FireCDActive = false;
+                    _fireCDTimer = 0f;
+                }
             }
-        }
+        }     
 	}
+
+    void OnSceneLoadedListener(Scene scene, LoadSceneMode mode)
+    {
+        _stompCDTimer = 0f;
+        _fireCDTimer = 0f;
+
+        StompCDOverlay.fillAmount = 0;
+        FireBreathCDOverlay.fillAmount = 0;
+
+        StompCDActive = false;
+        FireCDActive = false;
+    }
 
     public void TriggerStompCD()
     {
-        StompCDImage.fillAmount = 1;
+        StompCDOverlay.fillAmount = 1;
         StompCDActive = true;
     }
 
     public void TriggerFireBreathCD()
     {      
-        FireBreathCDImage.fillAmount = 1;
+        FireBreathCDOverlay.fillAmount = 1;
         FireCDActive = true;
     }
 }

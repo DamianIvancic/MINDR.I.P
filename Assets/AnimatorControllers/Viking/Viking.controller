@@ -68,6 +68,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: Damaged
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -81,6 +87,17 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
+--- !u!114 &114030998806236002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0567a4e7e7592e04d895fbdebd712214, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114260635689560426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -127,6 +144,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DashPoof: {fileID: 1782980313600188, guid: 8488ad58e41b23d4dbb2578cf423f207, type: 2}
+--- !u!114 &114705405919066620
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e37a4dd76edf61d43b815466c3bf2f90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114780486562263314
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1445,7 +1473,8 @@ AnimatorState:
   - {fileID: 1101961864452684982}
   - {fileID: 1101307271135123866}
   - {fileID: 1101260324716172832}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 114030998806236002}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1482,6 +1511,31 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: e6b01f5fb32bcee489100f8ca084c67a, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &1102475135005759458
+AnimatorState:
+  serializedVersion: 5
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Damaged
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 5afd537ae8ad98c448ab5779dc318350, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1821,6 +1875,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 1102990659727021172}
     m_Position: {x: 12, y: -312, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 1102475135005759458}
+    m_Position: {x: 47, y: -247, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

@@ -29,6 +29,7 @@ public class BatFlying : State<Bat>
 
     public override void EnterState(Bat owner)
     {
+        owner.anim.SetBool("Flying", true);
         owner.sineTimer = 0f;
     }
 
@@ -41,8 +42,7 @@ public class BatFlying : State<Bat>
     { }
 
     public override void UpdateMovement(Bat owner)
-    {
-
+    {  
         owner.sineTimer += Time.deltaTime;
 
         Vector3 pos = owner.transform.position;

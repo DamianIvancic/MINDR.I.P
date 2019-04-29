@@ -14,11 +14,12 @@ public class PlayerController : MonoBehaviour
     public Transform GroundCheckOrigin; // the origin from which the lines are projected (since the transform's position doesn't fit the sprite exactly)
     public List<Transform> GroundCheckList; //the points towards which the lines are projected
     public LayerMask GroundLayerMask;
-    private bool _isGrounded;
+    public bool isGrounded;
 
     public float Speed;
     public float JumpForce;
     public bool dashReady = true;
+    public bool controllable = true;  //gets set to false when taking damage in midair until you land
     private bool _runToggled = false;
     private float _movementH;
     private float _movementV;
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
 	void Start ()
     {
+        GameManager.GM.OnSetStateCallback += SetStateListener;
         TestInputManager.Instance.RegisterCallbacks();  
         //InputManager.Instance.RegisterCallbacks();         //registered from here instead of inside InputManager since there might not be a PlayerController active when the InputManager is instantiated
     }
@@ -53,9 +55,12 @@ public class PlayerController : MonoBehaviour
 
     void Update ()
     {
-        UpdateMovement();
-        UpdateAnimator();
-        SetOrientation();
+        if (GameManager.GM.CurrentSate == GameManager.GameState.Playing)
+        {
+            UpdateMovement();
+            UpdateAnimator();
+            SetOrientation();
+        }
     }
 
     void OnDestroy()
@@ -74,16 +79,19 @@ public class PlayerController : MonoBehaviour
 
     void UpdateMovement()
     {
-        if (!anim.GetBool("Blocking") && !anim.GetBool("FireBreathing") && 
+        if ( !anim.GetBool("Blocking") && !anim.GetBool("FireBreathing") && 
             !anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && !anim.GetCurrentAnimatorStateInfo(0).IsName("Stomp") && !anim.GetCurrentAnimatorStateInfo(0).IsName("AirDash"))
         {
             UpdateJump();
 
-            if (_runToggled)
-                RB.velocity = new Vector2(_movementH * Speed * 1.5f, _movementV);
-            else
-                RB.velocity = new Vector2(_movementH * Speed, _movementV);
-
+            if(controllable)
+            {
+                if (_runToggled)
+                    RB.velocity = new Vector2(_movementH * Speed * 1.5f, _movementV);
+                else
+                    RB.velocity = new Vector2(_movementH * Speed, _movementV);
+            }
+     
             /*if (RB.velocity.magnitude == 0f)
                  RB.isKinematic = true; //prevents enemies from pushing the player
              else
@@ -101,24 +109,27 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i < GroundCheckList.Count; i++) //check if there anything between the player and the points slightly below his feet , if there is he's grounded
         {
-            _isGrounded = (Physics2D.Linecast(GroundCheckOrigin.position, GroundCheckList[i].position, GroundLayerMask) && RB.velocity.y == 0);
-            if (_isGrounded == true)
+            isGrounded = (Physics2D.Linecast(GroundCheckOrigin.position, GroundCheckList[i].position, GroundLayerMask) && RB.velocity.y == 0);
+            if (isGrounded == true)
+            {
+                controllable = true;
                 break;
+            }
         }
     }
 
     void UpdateAnimator()
     {
-        anim.SetBool("Grounded", _isGrounded);
+        anim.SetBool("Grounded", isGrounded);
 
         if (RB.velocity.x != 0 && RB.velocity.y == 0)
             anim.SetBool(_runToggled ? "Running" : "Walking", true);
-        else if(RB.velocity.x == 0 || !_isGrounded)
+        else if(RB.velocity.x == 0 || !isGrounded)
             anim.SetBool(_runToggled ? "Running" : "Walking", false);
 
-        if (!_isGrounded && RB.velocity.y > 0)
+        if (!isGrounded && RB.velocity.y > 0)
             anim.SetBool("Jumping", true);
-        else if (!_isGrounded && RB.velocity.y < 0)
+        else if (!isGrounded && RB.velocity.y < 0)
             anim.SetBool("Falling", true);
         else
         {
@@ -142,7 +153,25 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    #region Callbacks - > All the callback functions go here
+    #region Callback listeners - > All the listener functions go here
+
+    //Listener for GameManager SetState()
+    void SetStateListener(GameManager.GameState state)
+    {
+        if (state == GameManager.GameState.Playing)
+        {
+            anim.enabled = true;
+            RB.gravityScale = 1;
+        }
+        else
+        {
+            anim.enabled = false;
+            RB.velocity = Vector2.zero;
+            RB.gravityScale = 0;
+            _movementH = 0;
+            _movementV = 0;
+        }
+    }
 
     public void MoveLeft()
     {
@@ -161,7 +190,7 @@ public class PlayerController : MonoBehaviour
 
     public void Jump()
     {
-        if (_isGrounded)
+        if (isGrounded)
         {
             RB.AddForce(Vector2.up * JumpForce);
         }
@@ -179,12 +208,13 @@ public class PlayerController : MonoBehaviour
 
     public void Attack()
     {
-        anim.SetBool("Attacking", true);
+        if(controllable)
+         anim.SetBool("Attacking", true);
     }
 
     public void Dash()
     {
-        if (dashReady)
+        if (controllable && dashReady)
         {
             anim.SetBool("Dashing", true);
             dashReady = false;  //gets set back to true when player enters Idle state (all transitions between states go through idle)
@@ -237,11 +267,13 @@ public class PlayerController : MonoBehaviour
         _runToggled = !_runToggled;    
     }
 
+
+
     #endregion
 
     void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.localScale.x > 0 ? transform.position + Vector3.right  : transform.position - Vector3.right , 0.1f);
-        Gizmos.DrawWireSphere(transform.localScale.x > 0 ? transform.position + new Vector3(1,-1.5f,0) : transform.position - Vector3.right, 0.1f);
+        Gizmos.DrawWireSphere(transform.localScale.x > 0 ? transform.position + new Vector3(1,-1.4f,0) : transform.position - Vector3.right, 0.1f);
     }
 }

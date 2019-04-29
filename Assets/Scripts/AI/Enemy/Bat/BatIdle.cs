@@ -38,7 +38,7 @@ public class BatIdle : State<Bat>
     {}
    
     public override void UpdateState(Bat owner)
-    {
+    {      
         if (owner.aggro)
             owner.stateMachine.ChangeState(_flyingReference);
     }

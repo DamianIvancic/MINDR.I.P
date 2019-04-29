@@ -19,7 +19,7 @@ public class Bat : Enemy
     [HideInInspector]
     public float frequency = 2f;
     [HideInInspector]
-    public float magnitude = 4f;
+    public float magnitude = 5f;
 
     public float sineTimer;
 
@@ -27,16 +27,27 @@ public class Bat : Enemy
     {
         base.Awake();
 
+        anim = GetComponent<Animator>();
+
         stateMachine = new StateMachine<Bat>(this);
-        stateMachine.ChangeState(BatIdle.Instance);
+        if(transform.parent.transform.parent!= null && transform.parent.transform.parent.gameObject.tag == "Spawner")
+            stateMachine.ChangeState(BatFlying.Instance);
+        else
+            stateMachine.ChangeState(BatIdle.Instance);
+
+      
+
         startingPos = transform.position;
     }
 
     protected override void Update()
     {
-        base.Update();
 
-        stateMachine.Update();
-   
+
+        if (GameManager.GM.CurrentSate == GameManager.GameState.Playing)
+        {
+            base.Update();
+            stateMachine.Update();
+        }
     }
 }

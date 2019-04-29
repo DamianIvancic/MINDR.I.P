@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviour
     public CameraController MainCamera;
     public AudioSource MainAudio;
 
+
+    public delegate void OnSetState(GameState state);
+    public OnSetState OnSetStateCallback;
+
     public enum GameState
     {
         Menu,
@@ -21,8 +25,12 @@ public class GameManager : MonoBehaviour
         Finished
     }
 
-    [HideInInspector]
-    public GameState gameState;
+    public GameState CurrentSate
+    {
+        get { return _gameState; }
+    }
+     
+    private GameState _gameState;
     [HideInInspector]
     public static GameManager GM;
 
@@ -39,12 +47,12 @@ public class GameManager : MonoBehaviour
             switch(sceneIndex)
             {
                 case (0):
-                    gameState = GameState.Menu;
+                    _gameState = GameState.Menu;
                     break;
                 default:
                     Player = FindObjectOfType<PlayerController>();
                     MainCamera = FindObjectOfType<CameraController>();
-                    gameState = GameState.Playing;
+                    _gameState = GameState.Playing;
                     break;
             }
 
@@ -57,7 +65,7 @@ public class GameManager : MonoBehaviour
 
 	void Update ()
     { 
-        if(gameState == GameState.Playing)
+        if(_gameState == GameState.Playing)
         {
             if (Input.GetKey(KeyCode.Escape))
                 PauseGame();
@@ -71,12 +79,12 @@ public class GameManager : MonoBehaviour
         switch (SceneIndex)
         {
             case (0):
-                gameState = GameState.Menu;
+                _gameState = GameState.Menu;
                 break;
             default:
                 Player = FindObjectOfType<PlayerController>();
                 MainCamera = FindObjectOfType<CameraController>();
-                gameState = GameState.Playing;
+                _gameState = GameState.Playing;
                 break;
         }
     }
@@ -96,6 +104,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void SetState(GameManager.GameState state)
+    {
+        _gameState = state;
+        OnSetStateCallback.Invoke(state);
+    }
+
     public void PlayGame()
     {
         UIManager.Instance.StompCDImage.gameObject.SetActive(true);
@@ -103,7 +117,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetMainMenu(false);
         UIManager.Instance.PauseBackgroundPanel.SetActive(false);
 
-        gameState = GameState.Playing;
+        _gameState = GameState.Playing;
     }
 
     public void PauseGame()
@@ -113,7 +127,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetMainMenu(true);
         UIManager.Instance.PauseBackgroundPanel.SetActive(true);
 
-        gameState = GameState.Paused;
+        _gameState = GameState.Paused;
     }
 
     public void QuitGame()

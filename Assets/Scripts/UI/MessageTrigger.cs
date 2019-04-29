@@ -8,22 +8,18 @@ public class MessageTrigger : MonoBehaviour {
 
     private bool _displayed;
 
-	void Start () {
-		
-	}
-	
+   
 	void Update ()
     {
-        if (_displayed && Input.GetKeyDown(KeyCode.Space))
-        {
-            UIManager.Instance.TextBackground.gameObject.SetActive(false);
-            Destroy(gameObject);           
-        }
+
+        if (_displayed && Input.GetKeyDown(KeyCode.Return))
+            UIManager.Instance.FinishTextDisplay();
+        
 	}
 
     void OnTriggerEnter2D(Collider2D trigger)
     {
-        if(trigger.gameObject.tag == "Player")
+        if(trigger.gameObject.tag == "Player" && _displayed == false)
         {
             UIManager.Instance.DisplayText(Message);
             _displayed = true;

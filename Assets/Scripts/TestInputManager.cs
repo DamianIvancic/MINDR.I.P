@@ -50,7 +50,7 @@ public class TestInputManager : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.GM.gameState == GameManager.GameState.Playing)
+        if (GameManager.GM.CurrentSate == GameManager.GameState.Playing)
         {
 
             if (EventSystem.current.IsPointerOverGameObject())

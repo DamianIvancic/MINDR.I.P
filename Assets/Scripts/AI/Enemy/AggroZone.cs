@@ -2,20 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AggroZone : MonoBehaviour
+public class AggroZone : MonoBehaviour 
 {
-    private Enemy _owner;
-    private Transform _transform;
+    private Enemy _owner; //no need for position updating since the zone is part of the same object as the owner
 
-	void Start ()
+    void Start ()
     {
         _owner = transform.parent.GetComponentInChildren<Enemy>();
-        _transform = transform; 
-	}
-
-	void Update ()
-    {
-        _transform.position = _owner.transform.position;
 	}
 
     void OnTriggerStay2D(Collider2D trigger)

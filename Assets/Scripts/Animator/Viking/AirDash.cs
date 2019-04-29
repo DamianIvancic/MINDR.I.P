@@ -21,7 +21,7 @@ public class AirDash : StateMachineBehaviour {
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if (Physics2D.Linecast(_transform.position, _scale.x > 0 ? _transform.position + Vector3.right : _transform.position - Vector3.right, GameManager.GM.Player.GroundLayerMask)
-             || Physics2D.Linecast(_transform.position, _scale.x > 0 ? _transform.position + new Vector3(1, -1.5f, 0) : _transform.position - new Vector3(1, -1.5f, 0), GameManager.GM.Player.GroundLayerMask))
+             || Physics2D.Linecast(_transform.position, _scale.x > 0 ? _transform.position + new Vector3(1, -1.4f, 0) : _transform.position - new Vector3(1, -1.4f, 0), GameManager.GM.Player.GroundLayerMask))
             animator.SetBool("Dashing", false);
 
         if (stateInfo.normalizedTime >= 0.1)

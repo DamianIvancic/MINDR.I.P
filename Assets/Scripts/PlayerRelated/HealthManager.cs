@@ -74,8 +74,11 @@ public class HealthManager : MonoBehaviour {
         if(!_invulnerable)
         {        
             _currentHP -= damage;
-            GameManager.GM.Player.damagedSound.Play();
             HPText.text = _currentHP.ToString();
+            GameManager.GM.Player.damagedSound.Play();
+
+            if (GameManager.GM.Player.isGrounded == false)
+                GameManager.GM.Player.controllable = false;
 
             StartCoroutine(InvulnerabilityEffect());
         }     

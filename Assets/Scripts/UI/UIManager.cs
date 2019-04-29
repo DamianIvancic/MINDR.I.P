@@ -22,8 +22,10 @@ public class UIManager : MonoBehaviour {
     public GameObject PauseBackgroundPanel;
     public Image StompCDImage;
     public Image FireCDImage;
+
     public Image TextBackground; //need to have references to both since text has to be child of image because of the layout group
     public Text MessageDisplayText;
+    public Queue<string> MessageQueue = new Queue<string>();
 
     public static UIManager Instance;
 
@@ -38,6 +40,21 @@ public class UIManager : MonoBehaviour {
         }
         else
             Destroy(gameObject);
+    }
+
+    void Update()
+    {
+        if(MessageQueue.Count > 0)
+        {
+            DisplayText(MessageQueue.Peek());
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                MessageQueue.Dequeue();
+                if (MessageQueue.Count == 0)
+                    FinishTextDisplay();
+            }
+        }
     }
 
     void OnSceneLoadedListener(Scene scene, LoadSceneMode mode)
@@ -75,6 +92,14 @@ public class UIManager : MonoBehaviour {
     {
         TextBackground.gameObject.SetActive(true);
         MessageDisplayText.text = message;
+        GameManager.GM.SetState(GameManager.GameState.Dialogue);    
+    }
+
+    public void FinishTextDisplay()
+    {
+        TextBackground.gameObject.SetActive(false);
+        MessageDisplayText.text = null;
+        GameManager.GM.SetState(GameManager.GameState.Playing);
     }
 
     public void SetMainMenu(bool state)

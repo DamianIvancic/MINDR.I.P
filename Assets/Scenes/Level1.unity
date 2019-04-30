@@ -67914,7 +67914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swingSound: {fileID: 0}
-  damagedSound: {fileID: 1693983581}
+  damagedSound: {fileID: 0}
   RB: {fileID: 0}
   anim: {fileID: 0}
   GroundCheckOrigin: {fileID: 504806912}
@@ -68430,7 +68430,7 @@ Prefab:
         type: 2}
       propertyPath: Player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1693983574}
     - target: {fileID: 114214621093062062, guid: faeda71155cd4a3458460f2d92b8f6f9,
         type: 2}
       propertyPath: MainCamera

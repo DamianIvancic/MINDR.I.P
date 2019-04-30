@@ -80,7 +80,7 @@ public class SkeletalWizard : Enemy {
 
 
         //keep this last in the update
-        if (GameManager.GM.gameState == GameManager.GameState.Playing)
+        if (GameManager.GM.CurrentSate == GameManager.GameState.Playing)
         {
             stateMachine.Update();
         }
@@ -117,11 +117,6 @@ public class SkeletalWizard : Enemy {
     }
     #endregion
 
-
-    public override void SetAggro(bool state)
-    {
-        aggro = state;
-    }
 
     public void TurnAround()
     {

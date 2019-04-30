@@ -314,7 +314,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4818576244721044, guid: a6accb1b3aebeeb4fb7640b66ea8781d, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1.87
+      value: 8.5
       objectReference: {fileID: 0}
     - target: {fileID: 4818576244721044, guid: a6accb1b3aebeeb4fb7640b66ea8781d, type: 2}
       propertyPath: m_LocalPosition.y
@@ -344,30 +344,20 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 61259463122799728, guid: a6accb1b3aebeeb4fb7640b66ea8781d,
+    - target: {fileID: 114389011073529296, guid: a6accb1b3aebeeb4fb7640b66ea8781d,
         type: 2}
-      propertyPath: m_Offset.y
-      value: -0.29702592
-      objectReference: {fileID: 0}
-    - target: {fileID: 61259463122799728, guid: a6accb1b3aebeeb4fb7640b66ea8781d,
-        type: 2}
-      propertyPath: m_Size.y
-      value: 2.2602592
-      objectReference: {fileID: 0}
+      propertyPath: Player
+      value: 
+      objectReference: {fileID: 1784793678}
     - target: {fileID: 61259463122799728, guid: a6accb1b3aebeeb4fb7640b66ea8781d,
         type: 2}
       propertyPath: m_Offset.x
-      value: -2.512274
+      value: -2.7552679
       objectReference: {fileID: 0}
     - target: {fileID: 61259463122799728, guid: a6accb1b3aebeeb4fb7640b66ea8781d,
         type: 2}
       propertyPath: m_Size.x
-      value: 6.024548
-      objectReference: {fileID: 0}
-    - target: {fileID: 61505742839610586, guid: a6accb1b3aebeeb4fb7640b66ea8781d,
-        type: 2}
-      propertyPath: m_EdgeRadius
-      value: 0
+      value: 5.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6accb1b3aebeeb4fb7640b66ea8781d, type: 2}
@@ -723,6 +713,10 @@ Prefab:
         type: 2}
       propertyPath: JumpForce
       value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 1822143093322066, guid: fb8d10a12dc16f44b89960b0afd1368d, type: 2}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb8d10a12dc16f44b89960b0afd1368d, type: 2}
@@ -1450,6 +1444,11 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!4 &1784793678 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4850840241109192, guid: fb8d10a12dc16f44b89960b0afd1368d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1007372498}
 --- !u!1001 &1796922391
 Prefab:
   m_ObjectHideFlags: 0

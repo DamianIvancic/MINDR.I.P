@@ -55,7 +55,14 @@ public class SkeletalWizardMove : State<SkeletalWizard>
 
     public override void UpdateAnimator(SkeletalWizard owner)
     {
-        throw new System.NotImplementedException();
+        if(owner._rb.velocity.magnitude > 0f)
+        {
+            owner._anim.SetBool("IsWalking", true);
+        }
+        else
+        {
+            owner._anim.SetBool("IsWalking", false);
+        }
     }
 
     public override void UpdateMovement(SkeletalWizard owner)
@@ -63,12 +70,7 @@ public class SkeletalWizardMove : State<SkeletalWizard>
         if (!Physics2D.Linecast(owner.GroundCheckOrigin.position, owner.GroundCheckFront.position, owner.GroundLayerMask) && owner._isGrounded)
         {
             Debug.Log("I will turn around now.");
-            Vector3 localScale = owner._transform.localScale;
-            localScale.x *= -1.0f;
-            owner._transform.localScale = localScale;
-
-            if (owner._isTurnedLeft) owner._isTurnedLeft = false;
-            else owner._isTurnedLeft = true;
+            owner.TurnAround();
 
         }
         else

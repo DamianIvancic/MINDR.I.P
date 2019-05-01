@@ -12,8 +12,8 @@ public class SkeletalWizard : Enemy {
 
     [HideInInspector]
     public StateMachine<SkeletalWizard> stateMachine;
-    [HideInInspector]
-    public bool aggro = false; // Did it see the player in the last few seconds
+    //[HideInInspector]
+    //public bool aggro = false; // Did it see the player in the last few seconds
     [HideInInspector]
     public float aggroLeashDuration = 5.0f; // Defines the 'few' seconds
     [HideInInspector]

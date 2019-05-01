@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour {
 
     public GameObject TitleScreenElements;
     public GameObject PauseBackgroundPanel;
+
+    public Image HitPointUI;
     public Image StompCDImage;
     public Image FireCDImage;
 
@@ -70,10 +72,20 @@ public class UIManager : MonoBehaviour {
                 GameOverMenu.SetActive(false);
                 TitleScreenElements.SetActive(true);
                 PauseBackgroundPanel.SetActive(false);
+                HitPointUI.gameObject.SetActive(false);
                 StompCDImage.gameObject.SetActive(false);
                 FireCDImage.gameObject.SetActive(false);
                 break;
-            case (1):
+            case (4):
+                MainMenu.SetActive(false);
+                GameOverMenu.SetActive(false);
+                TitleScreenElements.SetActive(false);
+                PauseBackgroundPanel.SetActive(false);
+                HitPointUI.gameObject.SetActive(false);
+                StompCDImage.gameObject.SetActive(false);
+                FireCDImage.gameObject.SetActive(false);
+                break;
+            case (3):
                 break;
             default:              
                 MainMenu.SetActive(false);
@@ -82,6 +94,7 @@ public class UIManager : MonoBehaviour {
                 GameOverMenu.SetActive(false);
                 TitleScreenElements.SetActive(false);
                 PauseBackgroundPanel.SetActive(false);
+                HitPointUI.gameObject.SetActive(true);
                 StompCDImage.gameObject.SetActive(true);
                 FireCDImage.gameObject.SetActive(true);
                 break;

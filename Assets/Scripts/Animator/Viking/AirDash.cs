@@ -27,7 +27,7 @@ public class AirDash : StateMachineBehaviour {
         if (stateInfo.normalizedTime >= 0.1)
         {
             Vector2 pos = _transform.position;
-            pos.x = Mathf.Lerp(_startingPos.x, _scale.x > 0 ? _startingPos.x + 9 : _startingPos.x - 9, stateInfo.normalizedTime -0.1f);
+            pos.x = Mathf.Lerp(_startingPos.x, _scale.x > 0 ? _startingPos.x + 10 : _startingPos.x - 10, stateInfo.normalizedTime -0.1f);
             _transform.position = pos;
         }
        

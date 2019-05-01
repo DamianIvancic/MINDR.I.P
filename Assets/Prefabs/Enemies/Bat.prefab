@@ -21,8 +21,6 @@ GameObject:
   - component: {fileID: 4996819269248056}
   - component: {fileID: 212425986599907282}
   - component: {fileID: 95811723693222652}
-  - component: {fileID: 58859245314952870}
-  - component: {fileID: 114867939554954278}
   m_Layer: 0
   m_Name: BatCreature
   m_TagString: Untagged
@@ -41,6 +39,8 @@ GameObject:
   - component: {fileID: 198008123199697788}
   - component: {fileID: 199401517171824150}
   - component: {fileID: 82669263834603746}
+  - component: {fileID: 114918641775476856}
+  - component: {fileID: 58039725686291576}
   m_Layer: 0
   m_Name: Bat
   m_TagString: Untagged
@@ -72,7 +72,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1521128292021766}
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -7.88, y: 0.5, z: 0}
+  m_LocalPosition: {x: 31.32, y: -1.11, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children:
   - {fileID: 4996819269248056}
@@ -106,6 +106,21 @@ Transform:
   m_Father: {fileID: 4763589490599464}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &58039725686291576
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521128292021766}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.2
 --- !u!58 &58438343646877954
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -121,21 +136,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 4
---- !u!58 &58859245314952870
-CircleCollider2D:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1389177758398912}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.2
 --- !u!82 &82669263834603746
 AudioSource:
   m_ObjectHideFlags: 1
@@ -250,26 +250,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114867939554954278
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1389177758398912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4b0e38ef27c42745bea93bd5ca63cef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 0
-  damage: 0
-  aggro: 0
-  anim: {fileID: 0}
-  startingPos: {x: 0, y: 0, z: 0}
-  speed: 0.01
-  frequency: 2
-  magnitude: 4
-  sineTimer: 0
 --- !u!114 &114870279561733458
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -281,6 +261,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6b274b7921dc7d459a7e467a5fc7ce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114918641775476856
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521128292021766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4b0e38ef27c42745bea93bd5ca63cef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  creature: {fileID: 1389177758398912}
+  aggroZone: {fileID: 1918611544983664}
+  startingPos: {x: 0, y: 0, z: 0}
+  startingScale: {x: 0, y: 0, z: 0}
+  maxHP: 1
+  damage: 1
+  speed: 2.5
+  aggro: 0
+  anim: {fileID: 0}
+  frequency: 2
+  magnitude: 5
+  sineTimer: 0
 --- !u!198 &198008123199697788
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -4905,7 +4908,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 6
   m_Sprite: {fileID: 21300000, guid: 60e619a52d0379849b6b09132f6a1b8a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

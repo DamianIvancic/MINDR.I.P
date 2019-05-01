@@ -22,22 +22,24 @@ public class Dash : StateMachineBehaviour
             PoofPosition.x -= 0.6f;        
         else          
             PoofPosition.x += 0.6f;
-        
-       // if(animator.GetBool("Grounded"))
-             Instantiate(DashPoof, PoofPosition, Quaternion.identity);
+             
+        Instantiate(DashPoof, PoofPosition, Quaternion.identity);
     }
 
 	// OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
 	override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(Physics2D.Linecast(_transform.position, _scale.x > 0 ? _transform.position + Vector3.right : _transform.position - Vector3.right, GameManager.GM.Player.GroundLayerMask)
-            || Physics2D.Linecast(_transform.position, _scale.x > 0 ? _transform.position + new Vector3(1,-1.4f,0) : _transform.position - new Vector3(1,-1.4f,0), GameManager.GM.Player.GroundLayerMask))
+        if (Physics2D.Linecast(_transform.position, _scale.x > 0 ? _transform.position + Vector3.right : _transform.position - Vector3.right, GameManager.GM.Player.GroundLayerMask)
+            || Physics2D.Linecast(_transform.position, _scale.x > 0 ? _transform.position + new Vector3(1, -1.25f, 0) : _transform.position - new Vector3(1, -1.25f, 0), GameManager.GM.Player.GroundLayerMask))
+        {
             animator.SetBool("Dashing", false);
+            Debug.Log("Dash collision!");
+        }
 
         if(stateInfo.normalizedTime >= 0.1)
         {
             Vector2 pos = _transform.position;
-            pos.x = Mathf.Lerp(_startingPos.x, _scale.x > 0 ? _startingPos.x + 9 : _startingPos.x - 9, stateInfo.normalizedTime - 0.1f);
+            pos.x = Mathf.Lerp(_startingPos.x, _scale.x > 0 ? _startingPos.x + 10 : _startingPos.x - 10, stateInfo.normalizedTime - 0.1f);
             _transform.position = pos;
         }
       

@@ -348,7 +348,7 @@ Prefab:
         type: 2}
       propertyPath: Player
       value: 
-      objectReference: {fileID: 1784793678}
+      objectReference: {fileID: 0}
     - target: {fileID: 61259463122799728, guid: a6accb1b3aebeeb4fb7640b66ea8781d,
         type: 2}
       propertyPath: m_Offset.x
@@ -462,6 +462,7 @@ GameObject:
   - component: {fileID: 537394362}
   - component: {fileID: 537394365}
   - component: {fileID: 537394364}
+  - component: {fileID: 537394366}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -480,10 +481,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2535b4ef21b3904093175059c06e1ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 1501886605}
+  Player: {fileID: 0}
   MainCamera: {fileID: 519420030}
   MainAudio: {fileID: 47132800}
-  gameState: 0
 --- !u!4 &537394363
 Transform:
   m_ObjectHideFlags: 0
@@ -516,12 +516,24 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 537394361}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4232498cd93f424aa91a9c14dacfc46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Keys: []
+  KeyBindings: []
+--- !u!114 &537394366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 537394361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb6cfeed80473d040ae240b7fb86fd92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   KeyBindings: []
 --- !u!1 &538121455
 GameObject:
@@ -717,6 +729,10 @@ Prefab:
     - target: {fileID: 1822143093322066, guid: fb8d10a12dc16f44b89960b0afd1368d, type: 2}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625828668143466, guid: fb8d10a12dc16f44b89960b0afd1368d, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb8d10a12dc16f44b89960b0afd1368d, type: 2}
@@ -960,8 +976,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ac5399586be0db49b31ddfabb0e1df4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StompCDImage: {fileID: 1569773573}
-  FireBreathCDImage: {fileID: 1080022646}
+  StompCDOverlay: {fileID: 0}
+  FireBreathCDOverlay: {fileID: 0}
   StompCDActive: 0
   FireCDActive: 0
 --- !u!114 &1501788109
@@ -1041,12 +1057,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1501886605 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114830767890569860, guid: fb8d10a12dc16f44b89960b0afd1368d,
-    type: 2}
-  m_PrefabInternal: {fileID: 1007372498}
-  m_Script: {fileID: 11500000, guid: ad83e01057d1bf9428cf1785b0b3f15c, type: 3}
 --- !u!1 &1569773571
 GameObject:
   m_ObjectHideFlags: 0
@@ -1444,11 +1454,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!4 &1784793678 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4850840241109192, guid: fb8d10a12dc16f44b89960b0afd1368d,
-    type: 2}
-  m_PrefabInternal: {fileID: 1007372498}
 --- !u!1001 &1796922391
 Prefab:
   m_ObjectHideFlags: 0

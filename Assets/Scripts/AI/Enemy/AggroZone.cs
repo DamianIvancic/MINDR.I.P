@@ -8,7 +8,7 @@ public class AggroZone : MonoBehaviour
 
     void Start ()
     {
-        _owner = transform.parent.GetComponentInChildren<Enemy>();
+        _owner = transform.parent.gameObject.GetComponent<Enemy>();
 	}
 
     void OnTriggerStay2D(Collider2D trigger)

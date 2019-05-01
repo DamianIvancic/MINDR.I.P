@@ -51,13 +51,19 @@ public class InputManager : MonoBehaviour
     [HideInInspector]
     public static InputManager Instance;
 
-    void Start()
+    void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+    }
 
+    void Start()
+    {
+        if(Instance == this)
+        {      
             string path = Application.persistentDataPath + "/Settings.dat";
 
             if (File.Exists(path))
@@ -190,7 +196,7 @@ public class InputManager : MonoBehaviour
     }
 
     public void RegisterCallbacks()
-    {
+    {    
         if (GameManager.GM.Player == null)
             Debug.Log("GM.Player not registered!");
         else

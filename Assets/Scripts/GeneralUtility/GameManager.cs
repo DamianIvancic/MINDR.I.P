@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
         Playing,
         Dialogue,
         Paused,
+        Loading,
         Cutscene,
         Gameover,
         Finished
@@ -56,7 +57,7 @@ public class GameManager : MonoBehaviour
                     break;
             }
 
-            SceneManager.sceneLoaded += OnSceneLoadedListener;
+            SceneManager.sceneLoaded += OnSceneLoadedListener;      
         }
         else
             Destroy(gameObject);
@@ -81,33 +82,40 @@ public class GameManager : MonoBehaviour
             case (0):
                 _gameState = GameState.Menu;
                 break;
+            case (3):            
+                break;
             default:
                 Player = FindObjectOfType<PlayerController>();
                 MainCamera = FindObjectOfType<CameraController>();
+                MainAudio = FindObjectOfType<AudioSource>();
                 _gameState = GameState.Playing;
                 break;
         }
     }
 
-    public void LoadScene(string sceneName)
-    {
-        SceneManager.LoadScene(sceneName);
-    }
-
     public void LoadScene(int sceneNum)
     {
         SceneManager.LoadScene(sceneNum);
+       // LoadingManager.LoadScene(sceneNum);
     }
 
     public void RestartScene()
+    {     
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //LoadingManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void LoadNextScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        //LoadingManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void SetState(GameManager.GameState state)
     {
         _gameState = state;
-        OnSetStateCallback.Invoke(state);
+        if(OnSetStateCallback != null)
+             OnSetStateCallback.Invoke(state);
     }
 
     public void PlayGame()

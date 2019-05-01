@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public Transform GroundCheckOrigin; // the origin from which the lines are projected (since the transform's position doesn't fit the sprite exactly)
     public List<Transform> GroundCheckList; //the points towards which the lines are projected
     public LayerMask GroundLayerMask;
+    public LayerMask PlatformLayerMask;
     public bool isGrounded;
 
     public float Speed;
@@ -49,7 +50,8 @@ public class PlayerController : MonoBehaviour
     {
         GameManager.GM.OnSetStateCallback += SetStateListener;
         TestInputManager.Instance.RegisterCallbacks();  
-        //InputManager.Instance.RegisterCallbacks();         //registered from here instead of inside InputManager since there might not be a PlayerController active when the InputManager is instantiated
+    
+       // InputManager.Instance.RegisterCallbacks();         //registered from here instead of inside InputManager since there might not be a PlayerController active when the InputManager is instantiated
     }
 
 
@@ -66,7 +68,8 @@ public class PlayerController : MonoBehaviour
     void OnDestroy()
     {
         TestInputManager.Instance.ClearCallbacks();
-       // InputManager.Instance.ClearCallbacks();
+        GameManager.GM.OnSetStateCallback -= SetStateListener;
+      // InputManager.Instance.ClearCallbacks();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -105,11 +108,12 @@ public class PlayerController : MonoBehaviour
     {
         _movementV = RB.velocity.y;
 
-        Physics2D.IgnoreLayerCollision(_playerLayer, _platformLayer, Input.GetKey(KeyCode.S) || _movementV > 0f);
+      //  Physics2D.IgnoreLayerCollision(_playerLayer, _platformLayer, Input.GetKey(KeyCode.S) || _movementV > 0f);
 
         for (int i = 0; i < GroundCheckList.Count; i++) //check if there anything between the player and the points slightly below his feet , if there is he's grounded
         {
-            isGrounded = (Physics2D.Linecast(GroundCheckOrigin.position, GroundCheckList[i].position, GroundLayerMask) && RB.velocity.y == 0);
+            isGrounded = ((Physics2D.Linecast(GroundCheckOrigin.position, GroundCheckList[i].position, GroundLayerMask) && RB.velocity.y == 0)
+                         ||Physics2D.Linecast(GroundCheckOrigin.position, GroundCheckList[i].position, PlatformLayerMask));
             if (isGrounded == true)
             {
                 controllable = true;
@@ -161,7 +165,7 @@ public class PlayerController : MonoBehaviour
         if (state == GameManager.GameState.Playing)
         {
             anim.enabled = true;
-            RB.gravityScale = 1;
+            RB.gravityScale = 2.5f;
         }
         else
         {
@@ -274,6 +278,6 @@ public class PlayerController : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.localScale.x > 0 ? transform.position + Vector3.right  : transform.position - Vector3.right , 0.1f);
-        Gizmos.DrawWireSphere(transform.localScale.x > 0 ? transform.position + new Vector3(1,-1.4f,0) : transform.position - Vector3.right, 0.1f);
+        Gizmos.DrawWireSphere(transform.localScale.x > 0 ? transform.position + new Vector3(1,-1.25f,0) : transform.position - Vector3.right, 0.1f);
     }
 }

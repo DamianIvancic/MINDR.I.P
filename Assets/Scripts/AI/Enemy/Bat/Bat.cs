@@ -4,18 +4,11 @@ using UnityEngine;
 
 public class Bat : Enemy
 {
-
     [HideInInspector]
     public StateMachine<Bat> stateMachine;
     [HideInInspector]
     public Animator anim;
-    private BoxCollider2D _trigger;
-
-    [HideInInspector]
-    public Vector3 startingPos;
-
-    //[HideInInspector]
-    public float speed = 0.01f;
+    
     [HideInInspector]
     public float frequency = 2f;
     [HideInInspector]
@@ -27,27 +20,19 @@ public class Bat : Enemy
     {
         base.Awake();
 
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
 
         stateMachine = new StateMachine<Bat>(this);
-        if(transform.parent.transform.parent!= null && transform.parent.transform.parent.gameObject.tag == "Spawner")
+        if(transform.parent != null && transform.parent.gameObject.tag == "Spawner")
             stateMachine.ChangeState(BatFlying.Instance);
         else
-            stateMachine.ChangeState(BatIdle.Instance);
-
-      
-
-        startingPos = transform.position;
+            stateMachine.ChangeState(BatIdle.Instance);  
+  
     }
 
-    protected override void Update()
+    void Update()
     {
-
-
-        if (GameManager.GM.CurrentSate == GameManager.GameState.Playing)
-        {
-            base.Update();
-            stateMachine.Update();
-        }
+        if (GameManager.GM.CurrentSate == GameManager.GameState.Playing)        
+            stateMachine.Update();     
     }
 }

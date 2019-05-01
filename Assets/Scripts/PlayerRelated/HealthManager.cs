@@ -21,21 +21,23 @@ public class HealthManager : MonoBehaviour {
 
     void Awake()
     {
-        if (Instance == null)
-        {
+       /* if (Instance == null)
+        {*/
             Instance = this;
 
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _color = _spriteRenderer.color;
 
             _currentHP = maxHP;
-            HPText.text = _currentHP.ToString();
-        }
+          
+        //}
     }
 
 	void Start () {
-		
-	}
+
+        HPText = UIManager.Instance.HitPointUI.gameObject.GetComponentInChildren<Text>();
+        HPText.text = _currentHP.ToString();
+    }
 	
 	void Update ()
     {  

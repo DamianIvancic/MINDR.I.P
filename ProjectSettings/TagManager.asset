@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Weapon
   - Spawner
+  - MainAudio
   layers:
   - Default
   - TransparentFX

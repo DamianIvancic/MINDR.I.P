@@ -57,7 +57,9 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void Update()
     {
+
         if (hitInvulTimer <= stunTimer)
+
         {
             isStunned = true;
         }
@@ -95,6 +97,7 @@ public abstract class Enemy : MonoBehaviour
 
     public void DamageEnemy(Collider2D trigger)
     {
+
 
         TakeDamage();
         hitInvulTimer = 0;

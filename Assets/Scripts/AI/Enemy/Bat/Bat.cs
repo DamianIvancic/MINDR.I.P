@@ -35,4 +35,19 @@ public class Bat : Enemy
         if (GameManager.GM.CurrentSate == GameManager.GameState.Playing)        
             stateMachine.Update();     
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        DamagePlayer(collision);
+
+        DamageEnemy(collision);
+    }
+
+    protected override void Kill()
+    {
+        _particles.Play();
+        creature.SetActive(false);
+        Destroy(gameObject, 1f);
+    }
+
 }

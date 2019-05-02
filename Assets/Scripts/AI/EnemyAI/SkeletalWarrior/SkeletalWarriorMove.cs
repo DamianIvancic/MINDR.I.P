@@ -2,52 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletalWizardMove : State<SkeletalWizard>
-{ 
-    private static SkeletalWizardMove _instance;
+public class SkeletalWarriorMove : State<SkeletalWarrior>
+{
+    private static SkeletalWarriorMove _instance;
 
     //states this can transit into
-    private static SkeletalWizardAggroed _aggroStateReference;
-    private static SkeletalWizardDeath _deathStateReference;
+    private static SkeletalWarriorAggroed _aggroStateReference;
+    private static SkeletalWarriorDeath _deathStateReference;
 
-    public static SkeletalWizardMove Instance
+    public static SkeletalWarriorMove Instance
     {
         get
         {
             if (_instance == null)
             {
-                new SkeletalWizardMove();
+                new SkeletalWarriorMove();
             }
 
             return _instance;
         }
     }
 
-    public SkeletalWizardMove()
+    public SkeletalWarriorMove()
     {
         if (_instance != null)
             return;
         _instance = this;
-        _aggroStateReference = SkeletalWizardAggroed.Instance;
-        _deathStateReference = SkeletalWizardDeath.Instance;
+        _aggroStateReference = SkeletalWarriorAggroed.Instance;
+        _deathStateReference = SkeletalWarriorDeath.Instance;
     }
 
-    public override void EnterState(SkeletalWizard owner)
+    public override void EnterState(SkeletalWarrior owner)
     {
 
         owner.stateFinished = false;
         Debug.Log("State enter: " + this);
     }
 
-    public override void UpdateState(SkeletalWizard owner)
+    public override void UpdateState(SkeletalWarrior owner)
     {
         UpdateAI(owner);
         UpdateMovement(owner);
         if (owner.stateMachine.currentState == this)
             UpdateAnimator(owner);
     }
-    
-    public override void UpdateAI(SkeletalWizard owner)
+
+    public override void UpdateAI(SkeletalWarrior owner)
     {
         if (owner.isDead)
             owner.stateMachine.ChangeState(_deathStateReference);
@@ -57,9 +57,9 @@ public class SkeletalWizardMove : State<SkeletalWizard>
 
     }
 
-    public override void UpdateAnimator(SkeletalWizard owner)
+    public override void UpdateAnimator(SkeletalWarrior owner)
     {
-        if(owner._rb.velocity.magnitude > 0f)
+        if (owner._rb.velocity.magnitude > 0f)
         {
             owner._anim.SetBool("IsWalking", true);
         }
@@ -69,7 +69,7 @@ public class SkeletalWizardMove : State<SkeletalWizard>
         }
     }
 
-    public override void UpdateMovement(SkeletalWizard owner)
+    public override void UpdateMovement(SkeletalWarrior owner)
     {
         if (!Physics2D.Linecast(owner.GroundCheckOrigin.position, owner.GroundCheckFront.position, owner.GroundLayerMask) && owner._isGrounded)
         {
@@ -80,7 +80,7 @@ public class SkeletalWizardMove : State<SkeletalWizard>
         else
         {
             Debug.Log("I can walk forward.");
-            if(owner._isTurnedLeft)
+            if (owner._isTurnedLeft)
             {
                 Vector2 temp = new Vector2(-1 * owner.speed, owner._gravity);
                 owner._rb.velocity = temp;
@@ -93,7 +93,7 @@ public class SkeletalWizardMove : State<SkeletalWizard>
         }
     }
 
-    public override void ExitState(SkeletalWizard owner)
+    public override void ExitState(SkeletalWarrior owner)
     {
         Debug.Log("State exit: " + this);
     }

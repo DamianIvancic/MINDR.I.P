@@ -2,50 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletalWizardAggroed : State<SkeletalWizard>
+public class SkeletalRogueAggroed : State<SkeletalRogue>
 {
 
-    private static SkeletalWizardAggroed _instance;
+    private static SkeletalRogueAggroed _instance;
 
     //states this can transit into
-    private static SkeletalWizardMove _moveStateReference;
-    private static SkeletalWizardDeath _deathStateReference;
+    private static SkeletalRogueMove _moveStateReference;
+    private static SkeletalRogueDeath _deathStateReference;
 
-    public static SkeletalWizardAggroed Instance
+    public static SkeletalRogueAggroed Instance
     {
         get
         {
             if (_instance == null)
             {
-                new SkeletalWizardAggroed();
+                new SkeletalRogueAggroed();
             }
 
             return _instance;
         }
     }
 
-    public SkeletalWizardAggroed()
+    public SkeletalRogueAggroed()
     {
         if (_instance != null)
             return;
         _instance = this;
-        _moveStateReference = SkeletalWizardMove.Instance;
-        _deathStateReference = SkeletalWizardDeath.Instance;
+        _moveStateReference = SkeletalRogueMove.Instance;
+        _deathStateReference = SkeletalRogueDeath.Instance;
     }
 
-    public override void EnterState(SkeletalWizard owner)
+    public override void EnterState(SkeletalRogue owner)
     {
         owner.stateFinished = false;
+        owner.speed *= owner.meleeSpeedIncrease;
 
         Debug.Log("State enter: " + this);
     }
 
-    public override void ExitState(SkeletalWizard owner)
+    public override void ExitState(SkeletalRogue owner)
     {
+        owner.speed /= owner.meleeSpeedIncrease;
         Debug.Log("State exit: " + this);
     }
 
-    public override void UpdateAI(SkeletalWizard owner)
+    public override void UpdateAI(SkeletalRogue owner)
     {
         if (owner.isDead)
             owner.stateMachine.ChangeState(_deathStateReference);
@@ -53,9 +55,9 @@ public class SkeletalWizardAggroed : State<SkeletalWizard>
             owner.stateMachine.ChangeState(_moveStateReference);
     }
 
-    public override void UpdateAnimator(SkeletalWizard owner)
+    public override void UpdateAnimator(SkeletalRogue owner)
     {
-        if (owner.seesPlayer)
+        if (owner.isInRange)
         {
             if (owner.attackTimer > owner.attackCooldown)
             {
@@ -64,11 +66,11 @@ public class SkeletalWizardAggroed : State<SkeletalWizard>
             }
             owner._anim.SetBool("IsWalking", false);
         }
-        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 5.5f)
+        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 2f)
         {
             owner._anim.SetBool("IsWalking", true);
         }
-        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x < -5.5f)
+        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x < -2f)
         {
             owner._anim.SetBool("IsWalking", true);
         }
@@ -76,13 +78,13 @@ public class SkeletalWizardAggroed : State<SkeletalWizard>
         {
             owner._anim.SetBool("IsWalking", false);
         }
-        
+
     }
 
-    public override void UpdateMovement(SkeletalWizard owner)
+    public override void UpdateMovement(SkeletalRogue owner)
     {
         //Turn to follow player
-        if(owner.transform.position.x - GameManager.GM.Player.transform.position.x > 0 )
+        if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 0)
         {
             if (!owner._isTurnedLeft) owner.TurnAround();
         }
@@ -92,16 +94,16 @@ public class SkeletalWizardAggroed : State<SkeletalWizard>
         }
 
         //Dont move if player in your range
-        if (owner.seesPlayer)
+        if (owner.isInRange)
         {
-            owner._rb.velocity = new Vector2 (0, owner._gravity);
+            owner._rb.velocity = new Vector2(0, owner._gravity);
         }
-        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 5.5f)
+        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 2f)
         {
             Vector2 temp = new Vector2(-1 * owner.speed, owner._gravity);
             owner._rb.velocity = temp;
         }
-        else if(owner.transform.position.x - GameManager.GM.Player.transform.position.x < -5.5f)
+        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x < -2f)
         {
             Vector2 temp = new Vector2(1 * owner.speed, owner._gravity);
             owner._rb.velocity = temp;
@@ -112,7 +114,7 @@ public class SkeletalWizardAggroed : State<SkeletalWizard>
         }
     }
 
-    public override void UpdateState(SkeletalWizard owner)
+    public override void UpdateState(SkeletalRogue owner)
     {
         UpdateAI(owner);
         if (owner.stateMachine.currentState == this)

@@ -7,10 +7,10 @@ public abstract class Enemy : MonoBehaviour {
     public GameObject creature;
     public GameObject aggroZone;
 
-    private AudioSource _damagedSound;
-    private ParticleSystem _particles;
+    protected AudioSource _damagedSound;
+    protected ParticleSystem _particles;
 
-    private Transform _transform;
+    protected Transform _transform;
  
     [HideInInspector]
     public Vector3 startingPos;
@@ -19,11 +19,17 @@ public abstract class Enemy : MonoBehaviour {
 
     public int maxHP;
     public int damage;
-    private int _currentHP;
+    public int _currentHP;
     public float speed;
 
     [HideInInspector]
-    public bool aggro;
+    public bool aggro = false;
+    [HideInInspector]
+    public float meleeSpeedIncrease = 1.5f;
+    [HideInInspector]
+    public bool isInRange = false;
+    //[HideInInspector]
+    public bool isDead = false;
 
     protected virtual void Awake()
     {
@@ -38,17 +44,6 @@ public abstract class Enemy : MonoBehaviour {
     }
 
 
-    void OnTriggerEnter2D(Collider2D trigger)
-    {
-        if (trigger.gameObject.tag == "Player")
-        {
-            HealthManager.Instance.TakeDamage(damage);        
-        }
-
-        if (trigger.gameObject.tag == "Weapon")
-            TakeDamage();
-    }
-
     public virtual void SetAggro(bool state)
     {
         aggro = state;
@@ -60,11 +55,29 @@ public abstract class Enemy : MonoBehaviour {
 
         _currentHP -= damage;
         if (_currentHP <= 0)
-        {      
-            _particles.Play();
-            creature.SetActive(false);
-            Destroy(gameObject, 1f);        
+        {
+            Kill();
+            
         }
+    }
+
+    public void DamagePlayer(Collider2D trigger)
+    {
+        if (trigger.gameObject.tag == "Player")
+        {
+            HealthManager.Instance.TakeDamage(damage);
+        }
+    }
+
+    public void DamageEnemy(Collider2D trigger)
+    {
+        if (trigger.gameObject.tag == "Weapon")
+            TakeDamage();
+    }
+
+    protected virtual void Kill()
+    {
+
     }
 }
 

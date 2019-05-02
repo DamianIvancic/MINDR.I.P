@@ -2,44 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletalRogueMove : State<SkeletalRogue>
+public class SkeletalWarriorMove : State<SkeletalWarrior>
 {
-    private static SkeletalRogueMove _instance;
+    private static SkeletalWarriorMove _instance;
 
     //states this can transit into
-    private static SkeletalRogueAggroed _aggroStateReference;
-    private static SkeletalRogueDeath _deathStateReference;
+    private static SkeletalWarriorAggroed _aggroStateReference;
+    private static SkeletalWarriorDeath _deathStateReference;
 
-    public static SkeletalRogueMove Instance
+    public static SkeletalWarriorMove Instance
     {
         get
         {
             if (_instance == null)
             {
-                new SkeletalRogueMove();
+                new SkeletalWarriorMove();
             }
 
             return _instance;
         }
     }
 
-    public SkeletalRogueMove()
+    public SkeletalWarriorMove()
     {
         if (_instance != null)
             return;
         _instance = this;
-        _aggroStateReference = SkeletalRogueAggroed.Instance;
-        _deathStateReference = SkeletalRogueDeath.Instance;
+        _aggroStateReference = SkeletalWarriorAggroed.Instance;
+        _deathStateReference = SkeletalWarriorDeath.Instance;
     }
 
-    public override void EnterState(SkeletalRogue owner)
-    {
-
-        owner.stateFinished = false;
+    public override void EnterState(SkeletalWarrior owner)
+    {      
         Debug.Log("State enter: " + this);
     }
 
-    public override void UpdateState(SkeletalRogue owner)
+    public override void UpdateState(SkeletalWarrior owner)
     {
         UpdateAI(owner);
         UpdateMovement(owner);
@@ -47,29 +45,23 @@ public class SkeletalRogueMove : State<SkeletalRogue>
             UpdateAnimator(owner);
     }
 
-    public override void UpdateAI(SkeletalRogue owner)
+    public override void UpdateAI(SkeletalWarrior owner)
     {
         if (owner.isDead)
             owner.stateMachine.ChangeState(_deathStateReference);
         if (owner.aggro)
             owner.stateMachine.ChangeState(_aggroStateReference);
-
-
     }
 
-    public override void UpdateAnimator(SkeletalRogue owner)
+    public override void UpdateAnimator(SkeletalWarrior owner)
     {
-        if (owner._rb.velocity.magnitude > 0f)
-        {
-            owner._anim.SetBool("IsWalking", true);
-        }
-        else
-        {
-            owner._anim.SetBool("IsWalking", false);
-        }
+        if (owner.RB.velocity.magnitude > 0f)    
+            owner.anim.SetBool("IsWalking", true);   
+        else      
+            owner.anim.SetBool("IsWalking", false);       
     }
 
-    public override void UpdateMovement(SkeletalRogue owner)
+    public override void UpdateMovement(SkeletalWarrior owner)
     {
         if (!owner.isStunned)
         {
@@ -77,20 +69,19 @@ public class SkeletalRogueMove : State<SkeletalRogue>
             {
                 Debug.Log("I will turn around now.");
                 owner.TurnAround();
-
             }
             else
             {
                 Debug.Log("I can walk forward.");
-                if (owner._isTurnedLeft)
+                if (owner.transform.localScale.x > 0)
                 {
                     Vector2 temp = new Vector2(-1 * owner.speed, owner._gravity);
-                    owner._rb.velocity = temp;
+                    owner.RB.velocity = temp;
                 }
                 else
                 {
                     Vector2 temp = new Vector2(1 * owner.speed, owner._gravity);
-                    owner._rb.velocity = temp;
+                    owner.RB.velocity = temp;
                 }
             }
         }
@@ -98,11 +89,11 @@ public class SkeletalRogueMove : State<SkeletalRogue>
         {
             Debug.Log("I am hit Stunned.");
             Vector2 temp = new Vector2(0, owner._gravity);
-            owner._rb.velocity = temp;
+            owner.RB.velocity = temp;
         }
     }
 
-    public override void ExitState(SkeletalRogue owner)
+    public override void ExitState(SkeletalWarrior owner)
     {
         Debug.Log("State exit: " + this);
     }

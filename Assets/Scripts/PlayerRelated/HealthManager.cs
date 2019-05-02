@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour {
 
+    public GameObject DistortionCube;
 
     private SpriteRenderer _spriteRenderer;
     private Color _color;
@@ -40,14 +41,17 @@ public class HealthManager : MonoBehaviour {
 
     void Start()
     {
-        //CooldownManager.Instance.UpdateSkillsActive(_currentHP);
+        DistortionCube = GameObject.FindGameObjectWithTag("Distortion");
+        DistortionCube.SetActive(false);
 
-      /*  UIManager.Instance.BerserkMeter.value = _currentHP / 5;
-        UIManager.Instance.BerserkChargeFill.fillAmount = _currentCharge / 5;*/
+        CooldownManager.Instance.UpdateSkillsActive(_currentHP);
+
+        UIManager.Instance.BerserkMeter.value = _currentHP / 5;
+        UIManager.Instance.BerserkChargeFill.fillAmount = _currentCharge / 5;
     }
 
 	void Update ()
-    {       
+    {
         if (_currentHP <= 0)
             GameManager.GM.RestartScene();
 	}
@@ -87,6 +91,9 @@ public class HealthManager : MonoBehaviour {
        
             GameManager.GM.Player.damagedSound.Play();
 
+            if (_currentHP <= 2)
+                DistortionCube.SetActive(true);
+
             if (_currentHP <= 0)
                 GameManager.GM.RestartScene();
 
@@ -103,9 +110,13 @@ public class HealthManager : MonoBehaviour {
         if(_currentCharge >= 5)
         {
             if (_currentHP < 5)
-            {
+            {           
                 _currentCharge -= 5;
                 _currentHP++;
+
+                if (_currentHP >= 3)
+                    DistortionCube.SetActive(false);
+
                 CooldownManager.Instance.UpdateSkillsActive(_currentHP);
                 UIManager.Instance.BerserkMeter.value = _currentHP / 5;
             }

@@ -6,8 +6,7 @@ public class Ghost : Enemy {
 
     [HideInInspector]
     public StateMachine<Ghost> stateMachine;
-    [HideInInspector]
-    public Animator anim;
+ 
     [HideInInspector]
     public SpriteRenderer sprite;
 
@@ -30,7 +29,7 @@ public class Ghost : Enemy {
         startingPos = transform.position;
     }
 
-    void Update ()
+    protected override void Update ()
     {
         if (GameManager.GM.CurrentSate == GameManager.GameState.Playing)
         {

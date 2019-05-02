@@ -7,8 +7,6 @@ public class SkeletalRogueDeath : State<SkeletalRogue>
 
     private static SkeletalRogueDeath _instance;
 
-
-
     public static SkeletalRogueDeath Instance
     {
         get
@@ -31,19 +29,7 @@ public class SkeletalRogueDeath : State<SkeletalRogue>
 
     public override void EnterState(SkeletalRogue owner)
     {
-
-        owner.stateFinished = false;
         Debug.Log("State enter: " + this);
-    }
-
-    public override void ExitState(SkeletalRogue owner)
-    {
-        Debug.Log("State exit: " + this);
-    }
-
-    public override void UpdateAI(SkeletalRogue owner)
-    {
-
     }
 
     public override void UpdateState(SkeletalRogue owner)
@@ -54,22 +40,28 @@ public class SkeletalRogueDeath : State<SkeletalRogue>
             UpdateAnimator(owner);
     }
 
+    public override void UpdateAI(SkeletalRogue owner)
+    {}
+
     public override void UpdateMovement(SkeletalRogue owner)
     {
         if (!owner._isGrounded)
         {
-            owner._rb.velocity = new Vector2(0, owner._gravity);
+            owner.RB.velocity = new Vector2(0, owner._gravity);
         }
         else
         {
-            owner._rb.velocity = new Vector2(0, 0);
+            owner.RB.velocity = new Vector2(0, 0);
         }
     }
 
     public override void UpdateAnimator(SkeletalRogue owner)
     {
+        owner.anim.SetTrigger("Death");
+    }
 
-        owner._anim.SetTrigger("Death");
-
+    public override void ExitState(SkeletalRogue owner)
+    {
+        Debug.Log("State exit: " + this);
     }
 }

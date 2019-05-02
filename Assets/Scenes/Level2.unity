@@ -7472,6 +7472,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 1965967873840876, guid: ec7650e09bb22604695776f150f48e77, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec7650e09bb22604695776f150f48e77, type: 2}
   m_IsPrefabAsset: 0
@@ -26678,6 +26682,44 @@ Prefab:
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1800957551950670, guid: 0f962bcfc2bd6af4e8f2b692b5043631, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224543435977104610, guid: 0f962bcfc2bd6af4e8f2b692b5043631,
+        type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224543435977104610, guid: 0f962bcfc2bd6af4e8f2b692b5043631,
+        type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224543435977104610, guid: 0f962bcfc2bd6af4e8f2b692b5043631,
+        type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224543435977104610, guid: 0f962bcfc2bd6af4e8f2b692b5043631,
+        type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224543435977104610, guid: 0f962bcfc2bd6af4e8f2b692b5043631,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224543435977104610, guid: 0f962bcfc2bd6af4e8f2b692b5043631,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1662296580027884, guid: 0f962bcfc2bd6af4e8f2b692b5043631, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336542605981690, guid: 0f962bcfc2bd6af4e8f2b692b5043631, type: 2}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}

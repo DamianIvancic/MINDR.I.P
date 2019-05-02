@@ -6,9 +6,7 @@ public class Bat : Enemy
 {
     [HideInInspector]
     public StateMachine<Bat> stateMachine;
-    [HideInInspector]
-    public Animator anim;
-    
+ 
     [HideInInspector]
     public float frequency = 2f;
     [HideInInspector]
@@ -36,21 +34,19 @@ public class Bat : Enemy
             stateMachine.Update();     
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D trigger)
     {
-        DamagePlayer(collision);
+        if (trigger.gameObject.tag == "Player")
+            HealthManager.Instance.TakeDamage(damage);
 
-        if (collision.gameObject.tag == "Weapon")
-        {
-            DamageEnemy(collision);
-        }
+        if (trigger.gameObject.tag == "Weapon")    
+            TakeDamage();     
     }
 
-    protected override void Kill()
+    protected override void TriggerDeath()
     {
         _particles.Play();
         creature.SetActive(false);
         Destroy(gameObject, 1f);
     }
-
 }

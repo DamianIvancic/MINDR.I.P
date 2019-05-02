@@ -90,7 +90,7 @@ public class UIManager : MonoBehaviour {
                 StompCDImage.gameObject.SetActive(false);
                 FireCDImage.gameObject.SetActive(false);
                 break;
-            case (2):
+            case (3):
                 break;
             default:              
                 MainMenu.SetActive(false);

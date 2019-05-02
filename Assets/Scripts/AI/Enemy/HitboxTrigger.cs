@@ -10,15 +10,15 @@ public class HitboxTrigger : MonoBehaviour
     {
         enemy = GetComponentInParent<Enemy>();
     }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Weapon")
         {
-            enemy.DamageEnemy(collision);
-            enemy.SetAggro(true);
-            enemy.aggroLeashTimer = 0.0f;
-            GetComponentInParent<Animator>().SetTrigger("Hit");
-            
+            if (enemy.hitInvulTimer > enemy.hitInvulDuration)
+                GetComponentInParent<Animator>().SetTrigger("Hit");
+
+            enemy.TakeDamage(); //set aggro gets called inside take damage          
         }
     }
 }

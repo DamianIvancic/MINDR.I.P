@@ -8,6 +8,7 @@ TagManager:
   - Spawner
   - MainAudio
   - Shield
+  - Distortion
   layers:
   - Default
   - TransparentFX

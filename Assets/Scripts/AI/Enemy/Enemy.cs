@@ -7,6 +7,10 @@ public abstract class Enemy : MonoBehaviour
     public GameObject creature;
     public GameObject aggroZone;
 
+    [HideInInspector]
+    public Rigidbody2D RB;
+    [HideInInspector]
+    public Animator anim;
     protected AudioSource _damagedSound;
     protected ParticleSystem _particles;
 
@@ -23,21 +27,21 @@ public abstract class Enemy : MonoBehaviour
     public float speed;
 
     [HideInInspector]
-    public float aggroLeashDuration = 5.0f;
-    //[HideInInspector]
-    public float aggroLeashTimer = 6.0f;
-    [HideInInspector]
-    public bool aggro = false;
-    [HideInInspector]
     public float meleeSpeedIncrease = 1.5f;
     [HideInInspector]
     public float hitInvulDuration = 0.7f;
     //[HideInInspector]
     public float hitInvulTimer = 1f;
     [HideInInspector]
-    public bool isInRange = false;
+    public float stunPeriod = 0.15f;
     [HideInInspector]
-    public float stunTimer = 0.15f;
+    public float aggroLeashDuration = 5.0f;
+    //[HideInInspector]
+    public float aggroLeashTimer = 6.0f;
+    [HideInInspector]
+    public bool aggro = false;
+    [HideInInspector]
+    public bool playerInRange = false;
     //[HideInInspector]
     public bool isDead = false;
     //[HideInInspector]
@@ -45,6 +49,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void Awake()
     {
+        anim = GetComponent<Animator>();
         _damagedSound = GetComponent<AudioSource>();
         _particles = GetComponent<ParticleSystem>();
 
@@ -57,9 +62,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void Update()
     {
-
-        if (hitInvulTimer <= stunTimer)
-
+        if (hitInvulTimer <= stunPeriod)
         {
             isStunned = true;
         }
@@ -70,6 +73,7 @@ public abstract class Enemy : MonoBehaviour
 
         hitInvulTimer += Time.deltaTime;
     }
+
     public virtual void SetAggro(bool state)
     {
         aggro = state;
@@ -77,37 +81,23 @@ public abstract class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage = 1)
     {
-        _damagedSound.Play();
-        HealthManager.Instance.ChargeBerserk();
-        _currentHP -= damage;
-        if (_currentHP <= 0)
+        SetAggro(true);
+
+        if(hitInvulTimer > hitInvulDuration)
         {
-            Kill();
+            _damagedSound.Play();
 
-        }
+            HealthManager.Instance.ChargeBerserk();
+
+            hitInvulTimer = 0;
+
+            _currentHP -= damage;
+            if (_currentHP <= 0)
+                TriggerDeath();
+        }  
     }
 
-    public void DamagePlayer(Collider2D trigger)
-    {
-        if (trigger.gameObject.tag == "Player")
-        {
-            HealthManager.Instance.TakeDamage(damage);
-        }
-    }
-
-    public void DamageEnemy(Collider2D trigger)
-    {
-
-
-        TakeDamage();
-        hitInvulTimer = 0;
-
-    }
-
-    protected virtual void Kill()
-    {
-
-    }
-
+    protected virtual void TriggerDeath()
+    {}
 }
 

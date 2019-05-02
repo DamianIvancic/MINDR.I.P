@@ -40,10 +40,10 @@ public class HealthManager : MonoBehaviour {
 
     void Start()
     {
-        CooldownManager.Instance.UpdateSkillsActive(_currentHP);
+        //CooldownManager.Instance.UpdateSkillsActive(_currentHP);
 
-        UIManager.Instance.BerserkMeter.value = _currentHP / 5;
-        UIManager.Instance.BerserkChargeFill.fillAmount = _currentCharge / 5;
+      /*  UIManager.Instance.BerserkMeter.value = _currentHP / 5;
+        UIManager.Instance.BerserkChargeFill.fillAmount = _currentCharge / 5;*/
     }
 
 	void Update ()

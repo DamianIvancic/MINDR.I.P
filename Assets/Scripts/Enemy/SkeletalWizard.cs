@@ -14,10 +14,7 @@ public class SkeletalWizard : Enemy {
     public StateMachine<SkeletalWizard> stateMachine;
     //[HideInInspector]
     //public bool aggro = false; // Did it see the player in the last few seconds
-    [HideInInspector]
-    public float aggroLeashDuration = 5.0f; // Defines the 'few' seconds
-    //[HideInInspector]
-    public float aggroLeashTimer = 6.0f;
+    
     [HideInInspector]
     public float attackCooldown = 6.0f;
 
@@ -61,8 +58,9 @@ public class SkeletalWizard : Enemy {
 	}
 
     // Update is called once per frame
-    void Update ()
+    protected override void Update ()
     {
+        base.Update();
         _isGrounded = (Physics2D.Linecast(GroundCheckOrigin.position, GroundCheckMid.position, GroundLayerMask));
 
         attackTimer += Time.deltaTime;

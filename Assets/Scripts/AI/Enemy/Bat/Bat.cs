@@ -30,7 +30,7 @@ public class Bat : Enemy
   
     }
 
-    void Update()
+    protected override void Update()
     {
         if (GameManager.GM.CurrentSate == GameManager.GameState.Playing)        
             stateMachine.Update();     
@@ -40,7 +40,10 @@ public class Bat : Enemy
     {
         DamagePlayer(collision);
 
-        DamageEnemy(collision);
+        if (collision.gameObject.tag == "Weapon")
+        {
+            DamageEnemy(collision);
+        }
     }
 
     protected override void Kill()

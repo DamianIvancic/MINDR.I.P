@@ -71,25 +71,34 @@ public class SkeletalRogueMove : State<SkeletalRogue>
 
     public override void UpdateMovement(SkeletalRogue owner)
     {
-        if (!Physics2D.Linecast(owner.GroundCheckOrigin.position, owner.GroundCheckFront.position, owner.GroundLayerMask) && owner._isGrounded)
+        if (!owner.isStunned)
         {
-            Debug.Log("I will turn around now.");
-            owner.TurnAround();
-
-        }
-        else
-        {
-            Debug.Log("I can walk forward.");
-            if (owner._isTurnedLeft)
+            if (!Physics2D.Linecast(owner.GroundCheckOrigin.position, owner.GroundCheckFront.position, owner.GroundLayerMask) && owner._isGrounded)
             {
-                Vector2 temp = new Vector2(-1 * owner.speed, owner._gravity);
-                owner._rb.velocity = temp;
+                Debug.Log("I will turn around now.");
+                owner.TurnAround();
+
             }
             else
             {
-                Vector2 temp = new Vector2(1 * owner.speed, owner._gravity);
-                owner._rb.velocity = temp;
+                Debug.Log("I can walk forward.");
+                if (owner._isTurnedLeft)
+                {
+                    Vector2 temp = new Vector2(-1 * owner.speed, owner._gravity);
+                    owner._rb.velocity = temp;
+                }
+                else
+                {
+                    Vector2 temp = new Vector2(1 * owner.speed, owner._gravity);
+                    owner._rb.velocity = temp;
+                }
             }
+        }
+        else
+        {
+            Debug.Log("I am hit Stunned.");
+            Vector2 temp = new Vector2(0, owner._gravity);
+            owner._rb.velocity = temp;
         }
     }
 

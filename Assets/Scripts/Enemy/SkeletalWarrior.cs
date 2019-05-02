@@ -13,10 +13,7 @@ public class SkeletalWarrior : Enemy {
     public StateMachine<SkeletalWarrior> stateMachine;
     //[HideInInspector]
     //public bool aggro = false; // Did it see the player in the last few seconds
-    [HideInInspector]
-    public float aggroLeashDuration = 5.0f; // Defines the 'few' seconds
-    //[HideInInspector]
-    public float aggroLeashTimer = 6.0f;
+    
     [HideInInspector]
     public float attackCooldown = 6.0f;
 
@@ -58,10 +55,12 @@ public class SkeletalWarrior : Enemy {
         _player = GameManager.GM.Player.transform;
         _playerRB = _player.GetComponent<Rigidbody2D>();
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    protected override void Update ()
     {
+        base.Update();
+
         _isGrounded = (Physics2D.Linecast(GroundCheckOrigin.position, GroundCheckMid.position, GroundLayerMask));
 
         attackTimer += Time.deltaTime;

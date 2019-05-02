@@ -57,60 +57,76 @@ public class SkeletalRogueAggroed : State<SkeletalRogue>
 
     public override void UpdateAnimator(SkeletalRogue owner)
     {
-        if (owner.isInRange)
+        if (!owner.isStunned)
         {
-            if (owner.attackTimer > owner.attackCooldown)
+            if (owner.isInRange)
             {
-                owner._anim.SetTrigger("Attack");
-                owner.attackTimer = 0f;
+                if (owner.attackTimer > owner.attackCooldown)
+                {
+                    owner._anim.SetTrigger("Attack");
+                    owner.attackTimer = 0f;
+                }
+                owner._anim.SetBool("IsWalking", false);
             }
-            owner._anim.SetBool("IsWalking", false);
-        }
-        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 2f)
-        {
-            owner._anim.SetBool("IsWalking", true);
-        }
-        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x < -2f)
-        {
-            owner._anim.SetBool("IsWalking", true);
+            else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 2f)
+            {
+                owner._anim.SetBool("IsWalking", true);
+            }
+            else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x < -2f)
+            {
+                owner._anim.SetBool("IsWalking", true);
+            }
+            else
+            {
+                owner._anim.SetBool("IsWalking", false);
+            }
         }
         else
         {
             owner._anim.SetBool("IsWalking", false);
         }
-
     }
 
     public override void UpdateMovement(SkeletalRogue owner)
     {
-        //Turn to follow player
-        if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 0)
+        if (!owner.isStunned)
         {
-            if (!owner._isTurnedLeft) owner.TurnAround();
-        }
-        else
-        {
-            if (owner._isTurnedLeft) owner.TurnAround();
-        }
 
-        //Dont move if player in your range
-        if (owner.isInRange)
-        {
-            owner._rb.velocity = new Vector2(0, owner._gravity);
-        }
-        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 2f)
-        {
-            Vector2 temp = new Vector2(-1 * owner.speed, owner._gravity);
-            owner._rb.velocity = temp;
-        }
-        else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x < -2f)
-        {
-            Vector2 temp = new Vector2(1 * owner.speed, owner._gravity);
-            owner._rb.velocity = temp;
+            //Turn to follow player
+            if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 0)
+            {
+                if (!owner._isTurnedLeft) owner.TurnAround();
+            }
+            else
+            {
+                if (owner._isTurnedLeft) owner.TurnAround();
+            }
+
+            //Dont move if player in your range
+            if (owner.isInRange)
+            {
+                owner._rb.velocity = new Vector2(0, owner._gravity);
+            }
+            else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x > 2f)
+            {
+                Vector2 temp = new Vector2(-1 * owner.speed, owner._gravity);
+                owner._rb.velocity = temp;
+            }
+            else if (owner.transform.position.x - GameManager.GM.Player.transform.position.x < -2f)
+            {
+                Vector2 temp = new Vector2(1 * owner.speed, owner._gravity);
+                owner._rb.velocity = temp;
+            }
+            else
+            {
+                owner._rb.velocity = new Vector2(0, owner._gravity);
+            }
         }
         else
         {
-            owner._rb.velocity = new Vector2(0, owner._gravity);
+            Debug.Log("I am hit Stunned.");
+            Vector2 temp = new Vector2(0, owner._gravity);
+            owner._rb.velocity = temp;
         }
     }
 

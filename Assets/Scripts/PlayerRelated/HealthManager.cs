@@ -5,43 +5,49 @@ using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour {
 
-    public Text HPText;
-    public int maxHP;
-    private int _currentHP;
 
     private SpriteRenderer _spriteRenderer;
     private Color _color;
+
+    private float _maxHP = 5;
+    private float _currentHP;
+
+    private float _maxCharge = 5;
+    private float _currentCharge;
+
+    private float _invulnerabilityTimer;
     private bool _alphaIncreasing = false;
     private bool _invulnerable = false;
-    private float _invulnerabilityTimer;
-
     
     [HideInInspector]
     public static HealthManager Instance;
 
     void Awake()
     {
-       /* if (Instance == null)
-        {*/
+        if (Instance == null)
+        {
             Instance = this;
 
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _color = _spriteRenderer.color;
 
-            _currentHP = maxHP;
-          
-        //}
+            _currentHP = 3;
+            _currentCharge = 0;
+        }
+        else
+            Destroy(gameObject);
     }
 
-	void Start () {
+    void Start()
+    {
+        CooldownManager.Instance.UpdateSkillsActive(_currentHP);
 
-        HPText = UIManager.Instance.HitPointUI.gameObject.GetComponentInChildren<Text>();
-        HPText.text = _currentHP.ToString();
+        UIManager.Instance.BerserkMeter.value = _currentHP / 5;
+        UIManager.Instance.BerserkChargeFill.fillAmount = _currentCharge / 5;
     }
-	
+
 	void Update ()
-    {  
-       
+    {       
         if (_currentHP <= 0)
             GameManager.GM.RestartScene();
 	}
@@ -74,15 +80,40 @@ public class HealthManager : MonoBehaviour {
     public void TakeDamage(int damage)
     {
         if(!_invulnerable)
-        {        
+        {               
             _currentHP -= damage;
-            HPText.text = _currentHP.ToString();
+            CooldownManager.Instance.UpdateSkillsActive(_currentHP);
+            UIManager.Instance.BerserkMeter.value = _currentHP / 5;
+       
             GameManager.GM.Player.damagedSound.Play();
+
+            if (_currentHP <= 0)
+                GameManager.GM.RestartScene();
 
             if (GameManager.GM.Player.isGrounded == false)
                 GameManager.GM.Player.controllable = false;
 
             StartCoroutine(InvulnerabilityEffect());
         }     
+    }
+
+    public void ChargeBerserk()
+    {
+        _currentCharge++;
+        if(_currentCharge >= 5)
+        {
+            if (_currentHP < 5)
+            {
+                _currentCharge -= 5;
+                _currentHP++;
+                CooldownManager.Instance.UpdateSkillsActive(_currentHP);
+                UIManager.Instance.BerserkMeter.value = _currentHP / 5;
+            }
+            else
+                _currentCharge = 5;
+           
+        }
+
+        UIManager.Instance.BerserkChargeFill.fillAmount = _currentCharge /5;
     }
 }

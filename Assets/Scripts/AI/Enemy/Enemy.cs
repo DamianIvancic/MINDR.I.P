@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour {
-
+public abstract class Enemy : MonoBehaviour
+{
     public GameObject creature;
     public GameObject aggroZone;
 
@@ -11,7 +11,7 @@ public abstract class Enemy : MonoBehaviour {
     protected ParticleSystem _particles;
 
     protected Transform _transform;
- 
+
     [HideInInspector]
     public Vector3 startingPos;
     [HideInInspector]
@@ -23,13 +23,25 @@ public abstract class Enemy : MonoBehaviour {
     public float speed;
 
     [HideInInspector]
+    public float aggroLeashDuration = 5.0f;
+    //[HideInInspector]
+    public float aggroLeashTimer = 6.0f;
+    [HideInInspector]
     public bool aggro = false;
     [HideInInspector]
     public float meleeSpeedIncrease = 1.5f;
     [HideInInspector]
+    public float hitInvulDuration = 0.7f;
+    //[HideInInspector]
+    public float hitInvulTimer = 1f;
+    [HideInInspector]
     public bool isInRange = false;
+    [HideInInspector]
+    public float stunTimer = 0.15f;
     //[HideInInspector]
     public bool isDead = false;
+    //[HideInInspector]
+    public bool isStunned = false;
 
     protected virtual void Awake()
     {
@@ -43,7 +55,19 @@ public abstract class Enemy : MonoBehaviour {
         _currentHP = maxHP;
     }
 
+    protected virtual void Update()
+    {
+        if (hitInvulTimer <= stunTimer)
+        {
+            isStunned = true;
+        }
+        else
+        {
+            isStunned = false;
+        }
 
+        hitInvulTimer += Time.deltaTime;
+    }
     public virtual void SetAggro(bool state)
     {
         aggro = state;
@@ -52,12 +76,12 @@ public abstract class Enemy : MonoBehaviour {
     public void TakeDamage(int damage = 1)
     {
         _damagedSound.Play();
-
+        HealthManager.Instance.ChargeBerserk();
         _currentHP -= damage;
         if (_currentHP <= 0)
         {
             Kill();
-            
+
         }
     }
 
@@ -71,13 +95,16 @@ public abstract class Enemy : MonoBehaviour {
 
     public void DamageEnemy(Collider2D trigger)
     {
-        if (trigger.gameObject.tag == "Weapon")
-            TakeDamage();
+
+        TakeDamage();
+        hitInvulTimer = 0;
+
     }
 
     protected virtual void Kill()
     {
 
     }
+
 }
 

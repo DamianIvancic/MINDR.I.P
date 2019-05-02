@@ -21,7 +21,8 @@ public class UIManager : MonoBehaviour {
     public GameObject TitleScreenElements;
     public GameObject PauseBackgroundPanel;
 
-    public Image HitPointUI;
+    public Slider BerserkMeter;
+    public Image BerserkChargeFill;
     public Image StompCDImage;
     public Image FireCDImage;
 
@@ -72,7 +73,9 @@ public class UIManager : MonoBehaviour {
                 GameOverMenu.SetActive(false);
                 TitleScreenElements.SetActive(true);
                 PauseBackgroundPanel.SetActive(false);
-                HitPointUI.gameObject.SetActive(false);
+                TextBackground.transform.parent.gameObject.SetActive(false);
+                BerserkMeter.gameObject.SetActive(false);
+                BerserkChargeFill.transform.parent.gameObject.SetActive(false);
                 StompCDImage.gameObject.SetActive(false);
                 FireCDImage.gameObject.SetActive(false);
                 break;
@@ -81,7 +84,9 @@ public class UIManager : MonoBehaviour {
                 GameOverMenu.SetActive(false);
                 TitleScreenElements.SetActive(false);
                 PauseBackgroundPanel.SetActive(false);
-                HitPointUI.gameObject.SetActive(false);
+                TextBackground.transform.parent.gameObject.SetActive(false);
+                BerserkMeter.gameObject.SetActive(false);
+                BerserkChargeFill.transform.parent.gameObject.SetActive(false);
                 StompCDImage.gameObject.SetActive(false);
                 FireCDImage.gameObject.SetActive(false);
                 break;
@@ -94,7 +99,9 @@ public class UIManager : MonoBehaviour {
                 GameOverMenu.SetActive(false);
                 TitleScreenElements.SetActive(false);
                 PauseBackgroundPanel.SetActive(false);
-                HitPointUI.gameObject.SetActive(true);
+                TextBackground.transform.parent.gameObject.SetActive(true);
+                BerserkMeter.gameObject.SetActive(true);
+                BerserkChargeFill.transform.parent.gameObject.SetActive(true);
                 StompCDImage.gameObject.SetActive(true);
                 FireCDImage.gameObject.SetActive(true);
                 break;

@@ -49,9 +49,9 @@ public class PlayerController : MonoBehaviour
 	void Start ()
     {
         GameManager.GM.OnSetStateCallback += SetStateListener;
-        TestInputManager.Instance.RegisterCallbacks();  
+      //  TestInputManager.Instance.RegisterCallbacks();  
     
-       // InputManager.Instance.RegisterCallbacks();         //registered from here instead of inside InputManager since there might not be a PlayerController active when the InputManager is instantiated
+       InputManager.Instance.RegisterCallbacks();         //registered from here instead of inside InputManager since there might not be a PlayerController active when the InputManager is instantiated
     }
 
 
@@ -67,9 +67,9 @@ public class PlayerController : MonoBehaviour
 
     void OnDestroy()
     {
-        TestInputManager.Instance.ClearCallbacks();
+       // TestInputManager.Instance.ClearCallbacks();
         GameManager.GM.OnSetStateCallback -= SetStateListener;
-      // InputManager.Instance.ClearCallbacks();
+        InputManager.Instance.ClearCallbacks();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -230,7 +230,7 @@ public class PlayerController : MonoBehaviour
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") || anim.GetCurrentAnimatorStateInfo(0).IsName("Walk")
            || anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
-            if(!CooldownManager.Instance.StompCDActive)
+            if(CooldownManager.Instance.StompSkillActive && !CooldownManager.Instance.StompCDActive)
                  anim.SetBool("Stomping", true);
         }
     }
@@ -254,9 +254,8 @@ public class PlayerController : MonoBehaviour
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") || anim.GetCurrentAnimatorStateInfo(0).IsName("Walk")
           || anim.GetCurrentAnimatorStateInfo(0).IsName("Run"))
         {
-            if (!CooldownManager.Instance.FireCDActive)      
-                anim.SetBool("FireBreathing", true);           
-            
+            if (CooldownManager.Instance.FireSkillActive && !CooldownManager.Instance.FireCDActive)      
+                anim.SetBool("FireBreathing", true);                   
         }
     }
 

@@ -6,11 +6,19 @@ using UnityEngine.SceneManagement;
 
 public class CooldownManager : MonoBehaviour
 {
+
+    public Image StompIcon;
+    public Image FireIcon;
+
     public Image StompCDOverlay;
     public Image FireBreathCDOverlay;
 
     [HideInInspector]
-    public bool StompCDActive = false;
+    public bool StompSkillActive = false; //a skill is active if the berserk meter is high enough
+    [HideInInspector]
+    public bool FireSkillActive = false;
+    [HideInInspector]
+    public bool StompCDActive = false;  //this controls whether the skill is on cooldown
     [HideInInspector]
     public bool FireCDActive = false;
 
@@ -28,13 +36,12 @@ public class CooldownManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
+            StompIcon.gameObject.SetActive(StompSkillActive);
+            FireIcon.gameObject.SetActive(FireSkillActive);
+
             SceneManager.sceneLoaded += OnSceneLoadedListener;
         }
     }
-
-	void Start () {
-		
-	}
 
 	void Update ()
     {
@@ -77,6 +84,26 @@ public class CooldownManager : MonoBehaviour
 
         StompCDActive = false;
         FireCDActive = false;
+    }
+
+    public void UpdateSkillsActive(float currentHP)
+    {
+        if (currentHP >= 4)
+        {
+            StompSkillActive = true;
+            if (currentHP == 5)
+                FireSkillActive = true;
+            else
+                FireSkillActive = false;
+        }
+        else
+        {
+            StompSkillActive = false;
+            FireSkillActive = false;
+        }
+
+        StompIcon.gameObject.SetActive(StompSkillActive);
+        FireIcon.gameObject.SetActive(FireSkillActive);
     }
 
     public void TriggerStompCD()

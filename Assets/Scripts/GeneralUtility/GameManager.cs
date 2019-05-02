@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetMainMenu(false);
         UIManager.Instance.PauseBackgroundPanel.SetActive(false);
 
-        _gameState = GameState.Playing;
+        SetState(GameState.Playing);
     }
 
     public void PauseGame()
@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetMainMenu(true);
         UIManager.Instance.PauseBackgroundPanel.SetActive(true);
 
-        _gameState = GameState.Paused;
+        SetState(GameState.Paused);
     }
 
     public void QuitGame()

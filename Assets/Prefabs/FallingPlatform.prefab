@@ -55,6 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waitPeriod: 2
+  acceleration: 0.1
 --- !u!19719996 &2113883506424743710
 TilemapCollider2D:
   m_ObjectHideFlags: 1

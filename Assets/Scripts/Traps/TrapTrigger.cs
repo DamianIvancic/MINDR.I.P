@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class TrapTrigger : MonoBehaviour
 {
-    public enum TrapType
-    {
-        Spike,
-        Push
-    }
-
-    public TrapType type;
-
     private Animator _anim;
 
     void Awake()
@@ -23,10 +15,7 @@ public class TrapTrigger : MonoBehaviour
     {
         if(trigger.gameObject.tag == "Player")
         {
-            _anim.SetBool("Triggered", true);
-
-            if (type == TrapType.Spike)
-                HealthManager.Instance.TakeDamage(1);
+            _anim.SetBool("Triggered", true);    
         }
     }
 

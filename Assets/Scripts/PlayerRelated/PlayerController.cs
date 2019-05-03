@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     public AudioSource swingSound;
     public AudioSource damagedSound;
+    public BoxCollider2D fireDamageZone;
+    public BoxCollider2D stompStunZone;
     [HideInInspector]
     public Rigidbody2D RB;
     [HideInInspector]

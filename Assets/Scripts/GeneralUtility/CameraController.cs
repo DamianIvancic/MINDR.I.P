@@ -25,13 +25,13 @@ public class CameraController : MonoBehaviour {
         switch(_sceneIdx)
         {
             case (1):
-                _maxPosX = 129;
+                _maxPosX = 128;
                 break;
             case (2):
                 _maxPosX = 259;
                 break;
             case (3):
-                _maxPosX = 300;
+                _maxPosX = 231;
                 break;
         }
     }

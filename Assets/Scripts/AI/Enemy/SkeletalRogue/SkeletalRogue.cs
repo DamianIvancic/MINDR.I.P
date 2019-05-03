@@ -12,9 +12,6 @@ public class SkeletalRogue : Enemy
     public Transform GroundCheckMid;
     public LayerMask GroundLayerMask;
 
-    private Transform _player;
-    private Rigidbody2D _playerRB;
-
     public float attackCooldown = 2.5f;
     [HideInInspector]
     public float attackTimer = 2.5f;
@@ -31,12 +28,6 @@ public class SkeletalRogue : Enemy
         stateMachine.ChangeState(SkeletalRogueMove.Instance);
        
         RB = GetComponent<Rigidbody2D>();    
-    }
-
-    void Start()
-    {
-        _player = GameManager.GM.Player.transform;
-        _playerRB = _player.GetComponent<Rigidbody2D>();
     }
 
     protected override void Update()
@@ -70,19 +61,32 @@ public class SkeletalRogue : Enemy
            aggroLeashTimer = 0f;       
     }
 
+    public override bool TakeDamage(int damage = 1)
+    {
+        SetAggro(true);
+
+        if (hitInvulTimer > hitInvulDuration)
+        {
+            _damagedSound.Play();
+            anim.SetTrigger("Hit");
+            HealthManager.Instance.ChargeBerserk();
+
+            hitInvulTimer = 0;
+
+            _currentHP -= damage;
+            if (_currentHP <= 0)
+                TriggerDeath();
+
+            return true;
+        }
+
+        return false;
+    }
 
     public void TurnAround()
     {
-        Vector3 localScale = _transform.localScale;
+        Vector3 localScale = transform.localScale;
         localScale.x *= -1.0f;
-        _transform.localScale = localScale;   
-    }
-
-    protected override void TriggerDeath()
-    {
-        //_particles.Play();
-        //creature.SetActive(false);
-        Destroy(gameObject, 3f);
-        isDead = true;
+        transform.localScale = localScale;   
     }
 }

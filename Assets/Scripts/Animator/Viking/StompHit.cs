@@ -16,14 +16,18 @@ public class StompHit : StateMachineBehaviour {
             scale.x *= -1;
             animator.gameObject.transform.localScale = scale;
         }
+
+        GameManager.GM.Player.stompStunZone.gameObject.SetActive(true);
     }
 
 	// OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
 	override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (stateInfo.normalizedTime > 0.99f)           
+        if (stateInfo.normalizedTime > 0.99f)
+        {
+            GameManager.GM.Player.stompStunZone.gameObject.SetActive(false);
             Destroy(animator.gameObject);
-        
+        }   
     }
 
 	// OnStateExit is called when a transition ends and the state machine finishes evaluating this state

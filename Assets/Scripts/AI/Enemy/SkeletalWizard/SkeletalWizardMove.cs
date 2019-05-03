@@ -34,7 +34,7 @@ public class SkeletalWizardMove : State<SkeletalWizard>
 
     public override void EnterState(SkeletalWizard owner)
     {
-        Debug.Log("State enter: " + this);
+
     }
 
     public override void UpdateState(SkeletalWizard owner)
@@ -56,42 +56,22 @@ public class SkeletalWizardMove : State<SkeletalWizard>
  
     public override void UpdateMovement(SkeletalWizard owner)
     {
+        Vector2 temp = new Vector2(0, owner._gravity);
+        owner.RB.velocity = temp;
+
+
         if (!owner.isStunned)
         {
-            if (!Physics2D.Linecast(owner.GroundCheckOrigin.position, owner.GroundCheckFront.position, owner.GroundLayerMask) && owner._isGrounded)
-            {
-                Debug.Log("I will turn around now.");
-                owner.TurnAround();
-            }
+            if ((owner.transform.position.x - GameManager.GM.Player.transform.position.x) > 0)
+                owner.transform.localScale = owner.startingScale;
             else
-            {
-                Debug.Log("I can walk forward.");
-                if (owner.transform.localScale.x > 0)
-                {
-                    Vector2 temp = new Vector2(-1 * owner.speed, owner._gravity);
-                    owner.RB.velocity = temp;
-                }
-                else
-                {
-                    Vector2 temp = new Vector2(1 * owner.speed, owner._gravity);
-                    owner.RB.velocity = temp;
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("I am hit Stunned.");
-            Vector2 temp = new Vector2(0, owner._gravity);
-            owner.RB.velocity = temp;
+                owner.transform.localScale = owner.startingScale * -1;
         }
     }
 
     public override void UpdateAnimator(SkeletalWizard owner)
     {
-        if (owner.RB.velocity.magnitude > 0f)
-            owner.anim.SetBool("IsWalking", true);
-        else
-            owner.anim.SetBool("IsWalking", false);
+ 
     }
 
     public override void ExitState(SkeletalWizard owner)

@@ -29,7 +29,7 @@ public class SkeletalRogueDeath : State<SkeletalRogue>
 
     public override void EnterState(SkeletalRogue owner)
     {
-        Debug.Log("State enter: " + this);
+        MonoBehaviour.Destroy(owner.gameObject, 3f);
     }
 
     public override void UpdateState(SkeletalRogue owner)

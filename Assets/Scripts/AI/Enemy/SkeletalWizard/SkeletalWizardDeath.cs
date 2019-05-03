@@ -27,8 +27,8 @@ public class SkeletalWizardDeath : State<SkeletalWizard> {
     }
 
     public override void EnterState(SkeletalWizard owner)
-    {   
-        Debug.Log("State enter: " + this);
+    {
+        MonoBehaviour.Destroy(owner.gameObject, 3f);
     }
 
   

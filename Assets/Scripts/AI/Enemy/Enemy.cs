@@ -8,13 +8,18 @@ public abstract class Enemy : MonoBehaviour
     public GameObject aggroZone;
 
     [HideInInspector]
+    public new Transform transform;
+    [HideInInspector]
     public Rigidbody2D RB;
     [HideInInspector]
     public Animator anim;
     protected AudioSource _damagedSound;
     protected ParticleSystem _particles;
 
-    protected Transform _transform;
+    [HideInInspector]
+    public Transform _player;
+    [HideInInspector]
+    public Rigidbody2D _playerRB;
 
     [HideInInspector]
     public Vector3 startingPos;
@@ -53,11 +58,17 @@ public abstract class Enemy : MonoBehaviour
         _damagedSound = GetComponent<AudioSource>();
         _particles = GetComponent<ParticleSystem>();
 
-        _transform = transform;
+        transform = gameObject.transform;
         startingPos = transform.position;
         startingScale = transform.localScale;
 
         _currentHP = maxHP;
+    }
+
+    void Start()
+    {
+        _player = GameManager.GM.Player.transform;
+        _playerRB = _player.GetComponent<Rigidbody2D>();
     }
 
     protected virtual void Update()
@@ -74,12 +85,25 @@ public abstract class Enemy : MonoBehaviour
         hitInvulTimer += Time.deltaTime;
     }
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Player" && GameManager.GM.Player.isGrounded == false && _playerRB.velocity.y <= 0)
+        {
+            Vector3 playerDistance = transform.position - _player.transform.position;
+            if (playerDistance.x > 0)
+                _player.transform.position += Vector3.left;
+            else
+                _player.transform.position += Vector3.right;
+        }
+    }
+
+
     public virtual void SetAggro(bool state)
     {
         aggro = state;
     }
 
-    public void TakeDamage(int damage = 1)
+    public virtual bool TakeDamage(int damage = 1)
     {
         SetAggro(true);
 
@@ -94,10 +118,16 @@ public abstract class Enemy : MonoBehaviour
             _currentHP -= damage;
             if (_currentHP <= 0)
                 TriggerDeath();
-        }  
+
+            return true;
+        }
+
+        return false;
     }
 
     protected virtual void TriggerDeath()
-    {}
+    {
+        isDead = true;
+    }
 }
 

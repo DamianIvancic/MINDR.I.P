@@ -6,7 +6,6 @@ public class HurtBox : MonoBehaviour
 {
     public int damage;
 
-
     void OnCollisionEnter2D(Collision2D collider)
     {
         if(collider.gameObject.tag == "Player")

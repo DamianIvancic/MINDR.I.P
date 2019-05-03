@@ -31,9 +31,7 @@ public class SkeletalWarriorDeath : State<SkeletalWarrior>
 
     public override void EnterState(SkeletalWarrior owner)
     {
-
-       
-        Debug.Log("State enter: " + this);
+        MonoBehaviour.Destroy(owner.gameObject, 3f);    
     }
 
     public override void UpdateState(SkeletalWarrior owner)

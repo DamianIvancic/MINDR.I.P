@@ -9,6 +9,7 @@ TagManager:
   - MainAudio
   - Shield
   - Distortion
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Enemy
   - Ground
   - Platform
-  - 
+  - Boss
   - 
   - 
   - 

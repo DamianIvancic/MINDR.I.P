@@ -34,7 +34,7 @@ public class SkeletalRogueMove : State<SkeletalRogue>
 
     public override void EnterState(SkeletalRogue owner)
     {
-        Debug.Log("State enter: " + this);
+
     }
 
     public override void UpdateState(SkeletalRogue owner)
@@ -57,14 +57,15 @@ public class SkeletalRogueMove : State<SkeletalRogue>
     {
         if (!owner.isStunned)
         {
-            if (!Physics2D.Linecast(owner.GroundCheckOrigin.position, owner.GroundCheckFront.position, owner.GroundLayerMask) && owner._isGrounded)
+            if ((!Physics2D.Linecast(owner.GroundCheckOrigin.position, owner.GroundCheckFront.position, owner.GroundLayerMask) && owner._isGrounded)
+                || (Physics2D.Linecast(owner.GroundCheckOrigin.position, owner.GroundCheckOrigin.position + (owner.transform.localScale.x > 0 ? new Vector3(-1, -0.55f, 0) : new Vector3(1, -0.55f, 0)), owner.GroundLayerMask)))
             {
-                Debug.Log("I will turn around now.");
+    
                 owner.TurnAround();
             }
             else
             {
-                Debug.Log("I can walk forward.");
+
                 if (owner.transform.localScale.x > 0) //turned left 
                 {
                     Vector2 temp = new Vector2(-1 * owner.speed, owner._gravity);
@@ -95,6 +96,6 @@ public class SkeletalRogueMove : State<SkeletalRogue>
 
     public override void ExitState(SkeletalRogue owner)
     {
-        Debug.Log("State exit: " + this);
+
     }
 }

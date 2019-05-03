@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour {
     public Button ContinueButton;
 
     public GameObject OptionsMenu;
+    public Toggle Hints;
     public AudioMixer Mixer;
 
     public GameObject ControlsMenu;
@@ -28,7 +29,9 @@ public class UIManager : MonoBehaviour {
 
     public Image TextBackground; //need to have references to both since text has to be child of image because of the layout group
     public Text MessageDisplayText;
-    public Queue<string> MessageQueue = new Queue<string>();
+
+    [HideInInspector]
+    public bool hintsEnabled;
 
     public static UIManager Instance;
 
@@ -39,25 +42,12 @@ public class UIManager : MonoBehaviour {
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
+            hintsEnabled = Hints.isOn;
+         
             SceneManager.sceneLoaded += OnSceneLoadedListener;
         }
         else
             Destroy(gameObject);
-    }
-
-    void Update()
-    {
-        if(MessageQueue.Count > 0)
-        {
-            DisplayText(MessageQueue.Peek());
-
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                MessageQueue.Dequeue();
-                if (MessageQueue.Count == 0)
-                    FinishTextDisplay();
-            }
-        }
     }
 
     void OnSceneLoadedListener(Scene scene, LoadSceneMode mode)
@@ -66,7 +56,7 @@ public class UIManager : MonoBehaviour {
 
         switch (SceneIndex)
         {
-            case (0):     
+            case 0:     
                 MainMenu.SetActive(true);
                 ContinueButton.gameObject.SetActive(false);
                 PlayButton.gameObject.SetActive(true);
@@ -79,18 +69,8 @@ public class UIManager : MonoBehaviour {
                 StompCDImage.gameObject.SetActive(false);
                 FireCDImage.gameObject.SetActive(false);
                 break;
-            case (4):
-                MainMenu.SetActive(false);
-                GameOverMenu.SetActive(false);
-                TitleScreenElements.SetActive(false);
-                PauseBackgroundPanel.SetActive(false);
-                TextBackground.transform.parent.gameObject.SetActive(false);
-                BerserkMeter.gameObject.SetActive(false);
-                BerserkChargeFill.transform.parent.gameObject.SetActive(false);
-                StompCDImage.gameObject.SetActive(false);
-                FireCDImage.gameObject.SetActive(false);
-                break;
-            case (3):
+            case 4:
+                gameObject.SetActive(false);
                 break;
             default:              
                 MainMenu.SetActive(false);
@@ -145,5 +125,10 @@ public class UIManager : MonoBehaviour {
     public void SetVolume(float volume)
     {
         Mixer.SetFloat("Volume", volume);
+    }
+
+    public void EnableHints(bool state)
+    {
+        hintsEnabled = state;
     }
 }

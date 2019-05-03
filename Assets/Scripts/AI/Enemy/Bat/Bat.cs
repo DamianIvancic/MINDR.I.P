@@ -46,6 +46,7 @@ public class Bat : Enemy
     protected override void TriggerDeath()
     {
         _particles.Play();
+        GetComponent<CircleCollider2D>().enabled = false;
         creature.SetActive(false);
         Destroy(gameObject, 1f);
     }

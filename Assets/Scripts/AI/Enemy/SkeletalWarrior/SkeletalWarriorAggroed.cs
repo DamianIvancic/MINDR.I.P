@@ -42,6 +42,8 @@ public class SkeletalWarriorAggroed : State<SkeletalWarrior>
 
     public override void UpdateState(SkeletalWarrior owner)
     {
+        Debug.Log("Swar aggroed");
+
         UpdateAI(owner);
         if (owner.stateMachine.currentState == this)
         {

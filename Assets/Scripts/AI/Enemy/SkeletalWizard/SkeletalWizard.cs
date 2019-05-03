@@ -12,9 +12,6 @@ public class SkeletalWizard : Enemy {
     public Transform GroundCheckFront;
     public Transform GroundCheckMid;
   
-    private Transform _player;
-    private Rigidbody2D _playerRB;
-
     public float attackCooldown = 5f;
     public float attackTimer = 5f;
     [HideInInspector]
@@ -31,12 +28,6 @@ public class SkeletalWizard : Enemy {
         stateMachine.ChangeState(SkeletalWizardMove.Instance);
         RB = GetComponent<Rigidbody2D>();
     }
-
-    void Start ()
-    {
-        _player = GameManager.GM.Player.transform;
-        _playerRB = _player.GetComponent<Rigidbody2D>();
-	}
 
     protected override void Update ()
     {
@@ -73,18 +64,32 @@ public class SkeletalWizard : Enemy {
             aggroLeashTimer = 0f;
     }
 
-    public void TurnAround()
+    public override bool TakeDamage(int damage = 1)
     {
-        Vector3 localScale = _transform.localScale;
-        localScale.x *= -1.0f;
-        _transform.localScale = localScale;
+        SetAggro(true);
+
+        if (hitInvulTimer > hitInvulDuration)
+        {
+            _damagedSound.Play();
+            anim.SetTrigger("Hit");
+            HealthManager.Instance.ChargeBerserk();
+
+            hitInvulTimer = 0;
+
+            _currentHP -= damage;
+            if (_currentHP <= 0)
+                TriggerDeath();
+
+            return true;
+        }
+
+        return false;
     }
 
-    protected override void TriggerDeath()
+    public void TurnAround()
     {
-        //_particles.Play();
-        //creature.SetActive(false);
-        Destroy(gameObject, 3f);
-        isDead = true;
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1.0f;
+        transform.localScale = localScale;
     }
 }

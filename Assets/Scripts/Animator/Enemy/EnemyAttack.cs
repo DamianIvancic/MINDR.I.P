@@ -23,7 +23,7 @@ public class EnemyAttack : StateMachineBehaviour {
         {
             _attackDone = true;
 
-            if (_playerAnim.GetBool("Blocking") && _playerAnim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f && GameManager.GM.Player.transform.localScale.x * animator.transform.localScale.x > 0)
+            if (_playerAnim.GetBool("Blocking") && _playerAnim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.5f && GameManager.GM.Player.transform.localScale.x * animator.transform.localScale.x > 0)
                 return;
 
             HealthManager.Instance.TakeDamage(_owner.damage);       

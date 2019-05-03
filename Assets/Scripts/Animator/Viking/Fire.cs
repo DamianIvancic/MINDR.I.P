@@ -16,6 +16,8 @@ public class Fire : StateMachineBehaviour {
             scale.x *= -1;
             animator.gameObject.transform.localScale = scale;
         }
+
+        GameManager.GM.Player.fireDamageZone.gameObject.SetActive(true);
     }
 
 	// OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -24,6 +26,7 @@ public class Fire : StateMachineBehaviour {
         if (stateInfo.normalizedTime > 0.99f)
         {
             GameManager.GM.Player.StopFireBreath();
+            GameManager.GM.Player.fireDamageZone.gameObject.SetActive(false);
             Destroy(animator.gameObject);
         }
     }

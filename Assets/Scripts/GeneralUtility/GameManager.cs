@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
             {
                 case (0):
                     _gameState = GameState.Menu;
-                    break;
+                    break;           
                 default:
                     Player = FindObjectOfType<PlayerController>();
                     MainCamera = FindObjectOfType<CameraController>();
@@ -71,6 +71,11 @@ public class GameManager : MonoBehaviour
             if (Input.GetKey(KeyCode.Escape))
                 PauseGame();
         }
+        else if(_gameState == GameState.Finished)
+        {
+            if (Input.GetKey(KeyCode.Escape))
+                Application.Quit();
+        }
 	}
 
     void OnSceneLoadedListener(Scene scene, LoadSceneMode mode) //listener for SceneManager.sceneLoaded
@@ -82,7 +87,8 @@ public class GameManager : MonoBehaviour
             case (0):
                 _gameState = GameState.Menu;
                 break;
-            case (3):            
+            case (4):
+                _gameState = GameState.Finished;
                 break;
             default:
                 Player = FindObjectOfType<PlayerController>();
@@ -97,6 +103,12 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(sceneNum);
        // LoadingManager.LoadScene(sceneNum);
+    }
+
+    public IEnumerator LoadScene(int sceneNum, float waitPeriod)
+    {
+        yield return new WaitForSeconds(waitPeriod);
+        SceneManager.LoadScene(sceneNum);
     }
 
     public void RestartScene()
